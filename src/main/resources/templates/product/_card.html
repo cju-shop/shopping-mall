@@ -3,7 +3,6 @@
         <img th:src="${p.img}" alt="상품 이미지" loading="lazy">
         <div class="card-body">
             <h2 class="card-title" th:text="${p.name}">상품명</h2>
-            <p class="card-meta" th:if="${p.freeShipping}">무료배송</p>
             <p class="card-price">
                 ₩ <span th:text="${#numbers.formatInteger(p.price, 3, 'COMMA')}">39,900</span>
             </p>

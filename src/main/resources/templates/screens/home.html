@@ -8,19 +8,20 @@
     <link rel="stylesheet" th:href="@{/css/card.css}">
 </head>
 <body>
-<header style="height: 100px; display: flex; flex-direction: column;justify-content: center; align-items: center;">
+<header style="flex: 2; flex-direction: column;justify-content: center; align-items: center;">
     <h2>배너</h2>
     <h2>네비게이터바</h2>
     <h2>광고</h2>
 </header>
 <main class="container">
-    <h1>오늘의 추천 상품</h1>
-    <p th:text="'총 ' + ${products.size()} + '개'">총 20개</p>
-    <section class="grid grid-4">
-        <div th:each="p : ${products}">
-            <div th:replace="~{product/_card :: productCard(p=${p})}"></div>
-        </div>
-    </section>
+    <div class="todayRecomment">
+        <h1>오늘의 추천</h1>
+        <section class="grid grid-4">
+            <div th:each="p : ${products}">
+                <div th:replace="~{product/_card :: productCard(p=${p})}"></div>
+            </div>
+        </section>
+    </div>
 
 </main>
 </body>

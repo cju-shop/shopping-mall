@@ -15,17 +15,16 @@ public class HomeController {
     public String home(Model model) {
         List<Map<String, Object>> products = new ArrayList<>();
 
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 4; i++) {
             Map<String, Object> p = new HashMap<>();
             p.put("id", i);
             p.put("name", "라이트 니트 카디건 #" + i);
             p.put("price", 39900 + (i % 5) * 1000);
-            p.put("img", "https://picsum.photos/seed/" + i + "/600/450"); // 👈 키 이름 = img
-            p.put("freeShipping", i % 3 == 0);
+            p.put("img", "https://picsum.photos/seed/" + i + "/600/450");
             products.add(p);
         }
 
-        model.addAttribute("products", products); // 👈 꼭 추가
+        model.addAttribute("products", products);
         return "screens/home";
     }
 

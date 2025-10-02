@@ -1,0 +1,55 @@
+/* 풀브리드/컨테이너 안용 공통 */
+.banner-slider {
+    position: relative;
+    width: 100%;
+    /* 풀브리드라면 아래 두 줄 사용:
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    */
+    overflow: hidden;
+    background: #eee;
+    border-radius: 12px;
+    margin: clamp(16px, 4vw, 40px) auto;
+}
+
+/* 트랙/슬라이드 */
+.banner-slider .slider-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    width: 100%;
+    transition: transform 400ms ease;
+}
+
+.banner-slider .slide {
+    display: block;
+    width: 100%;
+    height: 0;
+    padding-bottom: 28%;           /* 배너 높이 비율 (원하면 24~40%로 조절) */
+    position: relative;
+}
+
+.banner-slider .slide img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+
+/* 도트 네비게이션 */
+.banner-slider .dots {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: 12px;
+    display: flex; gap: 8px;
+}
+
+.banner-slider .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.25);
+    border: none; cursor: pointer;
+}
+.banner-slider .dot.active { background: #a67c00; }
+
+/* 네비 버튼 제거 버전(혹시 남아있어도 숨김) */
+.banner--no-arrows .nav { display: none !important; }

@@ -6,6 +6,8 @@
     <!-- 레이아웃 & 카드 CSS 분리 -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
+    <link rel="stylesheet" th:href="@{/css/banner.css}">
+
 </head>
 <body>
 <header style="flex: 2; flex-direction: column;justify-content: center; align-items: center;">
@@ -14,13 +16,36 @@
     <h2>광고</h2>
 </header>
 <main class="container">
-    <div class="todayRecomment">
-        <h1>오늘의 추천</h1>
+
+    <div class="today-recommend-Area">
+        <h1 class="today-recommend-title">오늘의 추천</h1>
         <section class="grid grid-4">
-            <div th:each="p : ${products}">
-                <div th:replace="~{product/_card :: productCard(p=${p})}"></div>
+            <div th:each="p : ${todayRecommendProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='recommend')}"></div>
             </div>
         </section>
+    </div>
+
+    <div class="bestArea">
+        <h1 class="best-title">베스트 모아보기</h1>
+        <section class="grid-small grid-4">
+            <div th:each="p : ${bestProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
+            </div>
+        </section>
+        <button class="btn-outline-gold">베스트 더보기</button>
+    </div>
+
+    <div th:replace="~{components/_banner :: bannerSlider(${banners})}"></div>
+
+    <div class="bestArea">
+        <h1 class="best-title">신상 모아보기</h1>
+        <section class="grid-small grid-4">
+            <div th:each="p : ${newProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
+            </div>
+        </section>
+        <button class="btn-outline-gold">신상 더보기</button>
     </div>
 
 </main>

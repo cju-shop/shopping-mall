@@ -13,7 +13,9 @@ import java.util.Map;
 public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
-        List<Map<String, Object>> products = new ArrayList<>();
+        List<Map<String, Object>> todayRecommendProducts = new ArrayList<>();
+        List<Map<String, Object>> bestProducts = new ArrayList<>();
+        List<Map<String, Object>> newProducts = new ArrayList<>();
 
         for (int i = 1; i <= 4; i++) {
             Map<String, Object> p = new HashMap<>();
@@ -21,10 +23,49 @@ public class HomeController {
             p.put("name", "라이트 니트 카디건 #" + i);
             p.put("price", 39900 + (i % 5) * 1000);
             p.put("img", "https://picsum.photos/seed/" + i + "/600/450");
-            products.add(p);
+            todayRecommendProducts.add(p);
+        }
+        for (int i = 1; i <= 8; i++) {
+            Map<String, Object> p = new HashMap<>();
+            p.put("id", i);
+            p.put("name", "라이트 니트 카디건 #" + i);
+            p.put("price", 39900 + (i % 5) * 1000);
+            p.put("img", "https://picsum.photos/seed/" + i + "/600/450");
+            bestProducts.add(p);
+        }
+        for (int i = 1; i <= 8; i++) {
+            Map<String, Object> p = new HashMap<>();
+            p.put("id", i);
+            p.put("name", "라이트 니트 카디건 #" + i);
+            p.put("price", 39900 + (i % 5) * 1000);
+            p.put("img", "https://picsum.photos/seed/" + i + "/600/450");
+            newProducts.add(p);
         }
 
-        model.addAttribute("products", products);
+        List<Map<String, String>> banners = new ArrayList<>();
+        banners.add(Map.of(
+                "img", "/img/ad1.jpg",
+                "href", "https://example.com/ad1",
+                "alt", "제휴사 광고 1"
+        ));
+        banners.add(Map.of(
+                "img", "/img/ad2.jpg",
+                "href", "https://example.com/ad2",
+                "alt", "제휴사 광고 2"
+        ));
+        banners.add(Map.of(
+                "img", "/img/ad3.jpg",
+                "href", "https://example.com/ad3",
+                "alt", "제휴사 광고 3"
+        ));
+
+        model.addAttribute("banners", banners);
+
+
+
+        model.addAttribute("todayRecommendProducts", todayRecommendProducts);
+        model.addAttribute("bestProducts", bestProducts);
+        model.addAttribute("newProducts", newProducts);
         return "screens/home";
     }
 

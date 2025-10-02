@@ -19,12 +19,36 @@ body {
     flex-direction: column; /* 세로 정렬 */
 }
 
-.container {flex: 7;margin:0 auto; padding:60px;}
-h1 { margin:0 0 30px;font-weight: bold; font-size: 50px }
+.container {flex: 7;margin:0 auto;}
+.today-recommend-title { margin:0 0 30px;font-weight: bold; font-size: 50px }
 p { margin:0 0 16px; color:var(--muted); }
 
 .grid { display:grid; gap:50px; }
+.grid-small { display:grid; gap:25px; }
 .grid-4 { grid-template-columns:repeat(4,1fr); }
 @media (max-width:1100px){ .grid-4{ grid-template-columns:repeat(3,1fr);} }
 @media (max-width:800px){ .grid-4{ grid-template-columns:repeat(2,1fr);} }
 @media (max-width:520px){ .grid-4{ grid-template-columns:1fr;} }
+.today-recommend-Area{padding:60px;}
+.bestArea { padding:60px; display: flex;flex-direction: column;justify-content: center;align-items: center; }
+.best-title { margin:0 0 30px;font-weight: bold; font-size: 30px }
+.new-title { margin:0 0 30px;font-weight: bold; font-size: 30px }
+
+.btn-outline-gold {
+    display: inline-block;
+    padding: 14px 80px;            /* 패딩을 늘려서 버튼 크기 키움 */
+    margin: 30px 0;
+    font-size: 13px;               /* 글자 크기 키움 */
+    font-weight: 600;
+    color: #a67c00;                /* 글자색 (골드) */
+    border: 2px solid #a67c00;     /* 테두리 굵게 */
+    border-radius: 30px;           /* 둥근 pill 모양 */
+    background: transparent;       /* 투명 배경 */
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-outline-gold:hover {
+    background: #a67c00;           /* 호버 시 배경 골드 */
+    color: #fff;                   /* 글자는 흰색 */
+}

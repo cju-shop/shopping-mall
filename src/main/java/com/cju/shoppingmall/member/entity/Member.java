@@ -3,33 +3,37 @@ package com.cju.shoppingmall.member.entity;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(nullable = false, unique = true)
-    String username;
+    private String username;
     @Column(nullable = false, unique = true)
-    String nickname;
+    private String nickname;
     @Column(nullable = false)
-    String name;
+    private String name;
     @Column(nullable = false)
-    String password;
+    private String password;
     @Column(nullable = false)
-    String phone;
+    private String phone;
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
     @Column(nullable = false)
-    MemberRole role;
+    private MemberRole role;
     @CreatedDate
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }

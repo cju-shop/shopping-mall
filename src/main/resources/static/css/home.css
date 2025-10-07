@@ -20,35 +20,69 @@ body {
 }
 
 .container {flex: 7;margin:0 auto;}
-.today-recommend-title { margin:0 0 30px;font-weight: bold; font-size: 50px }
-p { margin:0 0 16px; color:var(--muted); }
 
-.grid { display:grid; gap:50px; }
-.grid-small { display:grid; gap:25px; }
-.grid-4 { grid-template-columns:repeat(4,1fr); }
-@media (max-width:1100px){ .grid-4{ grid-template-columns:repeat(3,1fr);} }
-@media (max-width:800px){ .grid-4{ grid-template-columns:repeat(2,1fr);} }
-@media (max-width:520px){ .grid-4{ grid-template-columns:1fr;} }
-.today-recommend-Area{padding:60px;}
-.bestArea { padding:60px; display: flex;flex-direction: column;justify-content: center;align-items: center; }
-.best-title { margin:0 0 30px;font-weight: bold; font-size: 30px }
-.new-title { margin:0 0 30px;font-weight: bold; font-size: 30px }
+/* 텍스트 기본 */
+p { margin: 0 0 clamp(10px, 1vw, 16px); color: var(--muted); }
 
-.btn-outline-gold {
-    display: inline-block;
-    padding: 14px 80px;            /* 패딩을 늘려서 버튼 크기 키움 */
-    margin: 30px 0;
-    font-size: 13px;               /* 글자 크기 키움 */
-    font-weight: 600;
-    color: #a67c00;                /* 글자색 (골드) */
-    border: 2px solid #a67c00;     /* 테두리 굵게 */
-    border-radius: 30px;           /* 둥근 pill 모양 */
-    background: transparent;       /* 투명 배경 */
-    cursor: pointer;
-    transition: all 0.25s ease-in-out;
+/* 타이틀 */
+.today-recommend-title {
+    margin: 0 0 clamp(20px, 2.2vw, 40px);
+    font-weight: 700;
+    font-size: clamp(28px, 3.2vw, 50px);
 }
 
+/* 그리드 */
+.grid {
+    display: grid;
+    gap: clamp(16px, 2.5vw, 50px);
+}
+.grid-small {
+    display: grid;
+    gap: clamp(12px, 1.6vw, 25px);
+}
+
+/* 고정 4열(PC), 카드가 좁아지지 않도록 최소폭 보장 */
+.grid-4 {
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    /* 칸이 너무 좁아지는 걸 방지하려면 컨테이너 폭이 모자랄 때 자동 줄바꿈 가능 */
+    column-gap: clamp(16px, 2.5vw, 50px);
+    row-gap: clamp(16px, 2.5vw, 50px);
+}
+
+.best-title,
+.new-title {
+    margin: 0 0 clamp(18px, 2vw, 30px);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 30px);
+}
+
+.today-recommend-Area {
+    padding: clamp(24px, 4vw, 60px);
+}
+.bestArea {
+    padding: clamp(24px, 4vw, 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 아웃라인 골드 버튼 */
+.btn-outline-gold {
+    display: inline-block;
+    padding: clamp(10px, 1.2vw, 14px) clamp(36px, 6vw, 80px);
+    margin: clamp(16px, 2vw, 30px) 0;
+    font-size: clamp(12px, 0.9vw, 13px);
+    font-weight: 600;
+    color: #a67c00;
+    border: clamp(1px, 0.15vw, 2px) solid #a67c00;
+    border-radius: clamp(18px, 2vw, 30px);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.25s ease-in-out, color 0.25s ease-in-out, transform 0.15s ease;
+}
 .btn-outline-gold:hover {
-    background: #a67c00;           /* 호버 시 배경 골드 */
-    color: #fff;                   /* 글자는 흰색 */
+    background: #a67c00;
+    color: #fff;
+    transform: translateY(-0.2vw);
 }

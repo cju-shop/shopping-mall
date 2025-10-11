@@ -59,9 +59,23 @@ public class HomeController {
                 "alt", "제휴사 광고 3"
         ));
 
+        //제품광고(ad) 리스트
+        List<Map<String, String>> ads = new ArrayList<>();
+        ads.add(Map.of(
+                "img", "/img/ad1.jpg",
+                "href", "https://example.com/productAd1",
+                "alt", "제품 광고 1"));
+        ads.add(Map.of(
+                "img", "/img/ad2.jpg",
+                "href", "https://example.com/productAd2",
+                "alt", "제품 광고 2"));
+        ads.add(Map.of(
+                "img", "/img/ad3.jpg",
+                "href", "https://example.com/productAd3",
+                "alt", "제품 광고 2"));
+
         model.addAttribute("banners", banners);
-
-
+        model.addAttribute("ads", ads);
 
         model.addAttribute("todayRecommendProducts", todayRecommendProducts);
         model.addAttribute("bestProducts", bestProducts);

@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <title>상품 리스트</title>
-    <!-- 레이아웃 & 카드 CSS 분리 -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
     <link rel="stylesheet" th:href="@{/css/banner.css}">
-
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/ad.css}">
 </head>
 <body>
-<header style="flex: 2; flex-direction: column;justify-content: center; align-items: center;">
-    <h2>배너</h2>
-    <h2>네비게이터바</h2>
-    <h2>광고</h2>
-</header>
+<div th:replace="components/_header :: header"></div>
+<div th:replace="components/_ad :: adSlider(adList=${ads})"></div>
 <main class="container">
-
     <div class="today-recommend-Area">
         <h1 class="today-recommend-title">오늘의 추천</h1>
         <section class="grid grid-4">
@@ -25,7 +22,6 @@
             </div>
         </section>
     </div>
-
     <div class="bestArea">
         <h1 class="best-title">베스트 모아보기</h1>
         <section class="grid-small grid-4">
@@ -35,9 +31,7 @@
         </section>
         <button class="btn-outline-gold">베스트 더보기</button>
     </div>
-
     <div th:replace="~{components/_banner :: bannerSlider(${banners})}"></div>
-
     <div class="bestArea">
         <h1 class="best-title">신상 모아보기</h1>
         <section class="grid-small grid-4">
@@ -47,7 +41,10 @@
         </section>
         <button class="btn-outline-gold">신상 더보기</button>
     </div>
-
 </main>
+<div th:replace="~{components/_footer}"></div>
+<!-- js file -->
+<script th:src="@{/js/ad.js}"></script>
+
 </body>
 </html>

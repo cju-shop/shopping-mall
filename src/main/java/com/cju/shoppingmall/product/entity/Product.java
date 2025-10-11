@@ -27,15 +27,16 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private String description;
-    @Column(nullable = false)
+    @Column
     private String thumbnail;
     @Column(nullable = false)
     private Long basePrice;
-    @Column(nullable = false)
+    @Column
     private Double discountRate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
     @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)

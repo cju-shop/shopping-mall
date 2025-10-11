@@ -33,6 +33,7 @@ public class Member {
     @Column(nullable = false)
     private MemberRole role;
     @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;

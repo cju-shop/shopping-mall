@@ -34,6 +34,7 @@ public class ProductVariant {
     private Boolean isActive;
     private String fingerprint;
     @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)

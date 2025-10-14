@@ -41,12 +41,13 @@
     transform: translateX(-50%);
     bottom: clamp(10px, 0.9vw, 16px);
     display: flex;
+    align-items: center;
     gap: clamp(6px, 0.6vw, 12px);
     padding: 0;
 }
 
-/* 도트 버튼 */
 .banner-slider .dot {
+    aspect-ratio: 1 / 1;
     width: clamp(6px, 0.6vw, 10px);
     height: clamp(6px, 0.6vw, 10px);
     border-radius: 50%;
@@ -54,7 +55,15 @@
     border: none;
     cursor: pointer;
     transition: transform .15s ease, background .2s ease;
+
+    /* 브라우저 기본 스타일 제거 */
+    appearance: none;
+    -webkit-appearance: none;
+    line-height: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.banner-slider .dot.active { background: #a67c00; }
+.banner-slider .dot.active { background: #000; }
+
 

@@ -1,93 +1,84 @@
-.site-footer {
+/* ===== 기본 구조 ===== */
+.light-footer {
     background: #fff;
-    padding: 40px 0 10px 0;
     border-top: 1px solid #eee;
-    color: #222;
-    font-size: 16px;
-    margin-top: 60px;
+    color: #333;
+    padding: 50px 0 20px;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
+
 .footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     max-width: 1200px;
-    margin: auto;
-    align-items: flex-start;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
 }
+
 .footer-section {
-    flex: 1 1 220px;
-    margin: 0 20px;
+    flex: 1 1 240px;
     min-width: 180px;
 }
-.footer-brand {
-    max-width: 250px;
-}
-.footer-section h2, .footer-section h3 {
+
+.footer-section h3 {
+    font-size: 16px;
     font-weight: 700;
-    margin-bottom: 18px;
-    letter-spacing: 0.5px;
-}
-.footer-section address {
-    color: #888;
-    font-style: normal;
-    font-size: 15px;
-    line-height: 1.7;
     margin-bottom: 16px;
-    margin-top: 6px;
-    letter-spacing: 0.16px;
+    color: #111;
 }
+
 .footer-section ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
+
 .footer-section ul li {
-    margin: 8px 0;
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #555;
 }
-.footer-section a {
+
+.footer-section ul li span {
+    display: inline-block;
+    width: 90px;
     color: #222;
+    font-weight: 500;
+}
+
+.footer-section a {
+    color: #333;
     text-decoration: none;
     transition: color 0.2s;
 }
+
 .footer-section a:hover {
-    color: #bfa575;
+    color: #bfa575; /* 포인트 컬러 */
 }
-.footer-section form {
+
+/* ===== 하단 바 ===== */
+.footer-bottom {
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+    padding: 18px 20px 10px;
     display: flex;
     align-items: center;
-    margin-top: 5px;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 12px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
-.footer-section input[type="email"] {
-    padding: 6px 12px;
-    border: none;
-    border-bottom: 1px solid #222;
-    outline: none;
-    font-size: 15px;
-    background: transparent;
-    width: 180px;
+
+.footer-logo {
+    font-weight: 700;
+    color: #111;
 }
-.footer-section button {
+
+.footer-copy {
+    color: #777;
     font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-bottom: 2px solid #222;
-    background: transparent;
-    color: #222;
-    cursor: pointer;
-    padding: 6px 16px 6px 0;
-    transition: color 0.2s, border-bottom 0.2s;
-}
-.footer-section button:hover {
-    color: #bfa575;
-    border-bottom: 2px solid #bfa575;
-}
-.footer-bottom {
-    text-align: left;
-    margin-top: 38px;
-    color: #444;
-    font-size: 15px;
-    padding-left: 38px;
-    border-top: 1px solid #eee;
-    padding-top: 18px;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
 }

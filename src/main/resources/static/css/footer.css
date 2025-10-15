@@ -1,0 +1,84 @@
+/* ===== 기본 구조 ===== */
+.light-footer {
+    background: #fff;
+    border-top: 1px solid #eee;
+    color: #333;
+    padding: 50px 0 20px;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.footer-section {
+    flex: 1 1 240px;
+    min-width: 180px;
+}
+
+.footer-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #111;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #555;
+}
+
+.footer-section ul li span {
+    display: inline-block;
+    width: 90px;
+    color: #222;
+    font-weight: 500;
+}
+
+.footer-section a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-section a:hover {
+    color: #bfa575; /* 포인트 컬러 */
+}
+
+/* ===== 하단 바 ===== */
+.footer-bottom {
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+    padding: 18px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-logo {
+    font-weight: 700;
+    color: #111;
+}
+
+.footer-copy {
+    color: #777;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+}

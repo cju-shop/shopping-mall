@@ -1,0 +1,17 @@
+<div class="ad-slider" th:fragment="adSlider(adList)">
+    <div class="slider-track" style="display: flex; transition: transform 0.3s ease;">
+        <a class="ad-slide"
+           th:each="ad, iStat : ${adList}"
+           th:href="${ad['href']}"
+           th:classappend="${iStat.index == 0} ? 'active' : ''"
+           target="_blank"
+           rel="noopener">
+            <img th:src="${ad['img']}" th:alt="${ad['alt']}" />
+            <div class="slide-index"
+                 th:text="${iStat.index + 1 + '/' + #lists.size(adList)}">1/3</div>
+        </a>
+    </div>
+
+    <button class="ad-arrow left" type="button">&#10094;</button>
+    <button class="ad-arrow right" type="button">&#10095;</button>
+</div>

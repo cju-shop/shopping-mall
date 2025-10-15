@@ -1,0 +1,65 @@
+/* 공통 카드 스타일 */
+.card {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+}
+
+/* 이미지 */
+.card img {
+    width: 100%;
+    aspect-ratio: 3/4;   /* 기본 비율 */
+    object-fit: cover;
+    display: block;
+}
+
+/* 카드 내용 */
+.card-body {
+    padding-top: 0.6vw;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 제목/가격 기본 */
+.card-title {
+    font-weight: 400;
+    font-size: clamp(0.9rem, 0.9vw, 1.2rem); /* 노트북~대형모니터 대응 */
+    margin: 0 0 0.4vw;
+    line-height: 1.3;
+    color: #222;
+}
+
+.card-price {
+    color: black;
+    font-weight: 800;
+    font-size: clamp(1rem, 1vw, 1.3rem);
+}
+
+/* 오늘의 추천(큰 카드) */
+.card.recommend {
+    width: clamp(240px, 20vw, 320px);
+}
+.card.recommend img {
+    aspect-ratio: 4/5;
+}
+.card.recommend .card-title {
+    font-size: clamp(1rem, 1vw, 1.3rem);
+}
+.card.recommend .card-price {
+    font-size: clamp(1.1rem, 1.1vw, 1.4rem);
+}
+
+/* 베스트/신상품(작은 카드) */
+.card.small {
+    width: clamp(220px, 17vw, 280px);
+}
+.card.small img {
+    aspect-ratio: 4/5;
+}
+.card.small .card-title {
+    font-size: clamp(0.875rem, 0.85vw, 1rem);
+}
+.card.small .card-price {
+    font-size: clamp(0.9375rem, 0.95vw, 1.1rem);
+}

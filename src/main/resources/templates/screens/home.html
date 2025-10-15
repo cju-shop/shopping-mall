@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>상품 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
+    <link rel="stylesheet" th:href="@{/css/banner.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/ad.css}">
+</head>
+<body>
+<div th:replace="components/_header :: header"></div>
+<div th:replace="components/_ad :: adSlider(adList=${ads})"></div>
+<main class="container">
+    <div class="today-recommend-Area">
+        <h1 class="today-recommend-title">오늘의 추천</h1>
+        <section class="grid grid-4">
+            <div th:each="p : ${todayRecommendProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='recommend')}"></div>
+            </div>
+        </section>
+    </div>
+    <div class="bestArea">
+        <h1 class="best-title">베스트 모아보기</h1>
+        <section class="grid-small grid-4">
+            <div th:each="p : ${bestProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
+            </div>
+        </section>
+        <button class="btn-outline-gold">베스트 더보기</button>
+    </div>
+    <div th:replace="~{components/_banner :: bannerSlider(${banners})}"></div>
+    <div class="bestArea">
+        <h1 class="best-title">신상 모아보기</h1>
+        <section class="grid-small grid-4">
+            <div th:each="p : ${newProducts}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
+            </div>
+        </section>
+        <button class="btn-outline-gold">신상 더보기</button>
+    </div>
+</main>
+<div th:replace="~{components/_footer}"></div>
+<!-- js file -->
+<script th:src="@{/js/ad.js}"></script>
+
+</body>
+</html>

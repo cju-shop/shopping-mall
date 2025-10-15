@@ -1,0 +1,74 @@
+.ad-slider {
+    position: relative; /* 화살표의 기준점이 슬라이더가 되도록 */
+}
+
+.ad-slider .slider-track {
+    width: auto; /* 100% 대신 내용 크기에 맞게 */
+    display: flex;
+    transition: transform 0.4s ease;
+    gap: 10px; /* 이미지 간격 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
+    scroll-snap-type: x mandatory; /* 부드러운 스냅 */
+
+    /* 스크롤바 숨김 */
+    -ms-overflow-style: none;  /* IE, Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+.ad-slider .slider-track::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+}
+
+.ad-slider .ad-slide {
+    flex-shrink: 0;
+    width: 300px; /* 고정 너비 */
+    height: 420px;
+    position: relative;
+    overflow: hidden;
+    flex-basis: auto;
+    scroll-snap-align: start;
+}
+
+.ad-slider .ad-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+/* 슬라이드 이전/다음 화살표 */
+.ad-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(100,100,100,0.25);
+    border: none;
+    color: #fff;
+    font-size: 2.2rem;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+    z-index: 2;
+}
+.ad-arrow.left { left: 34px; }
+.ad-arrow.right { right: 34px; }
+.ad-arrow:hover { background: #bfa247; color: #fff; }
+
+/* 슬라이드 번호(우측 하단) */
+.slide-index {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    background: #BFBFBF;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    pointer-events: none;
+    z-index: 5;
+    min-width: 48px;
+    text-align: center;
+}

@@ -1,0 +1,33 @@
+<div th:fragment="bannerSlider(banners)">
+    <section class="banner-slider banner--no-arrows" aria-label="제휴사 광고"
+             th:with="total=${#lists.size(banners)}">
+
+        <!-- 트랙(각 슬라이드가 가로로 100%씩) -->
+        <div class="slider-track" role="region" aria-roledescription="carousel">
+            <a class="slide"
+               th:each="b, s : ${banners}"
+               th:href="${b['href']}"
+               target="_blank" rel="noopener"
+               th:attr="
+           aria-label=|슬라이드 ${s.count} / ${total}|,
+           aria-hidden=${!s.first}
+         ">
+                <img th:src="${b['img']}" th:alt="${b['alt']}">
+            </a>
+        </div>
+
+        <!-- 도트 네비게이션 -->
+        <div class="dots" role="tablist" aria-label="배너 이동">
+            <button class="dot" type="button"
+                    th:each="b, iStat : ${banners}"
+                    th:attr="
+                data-index=${iStat.index},
+                aria-label=|${iStat.count}번째 배너로 이동|,
+                aria-pressed=${iStat.first}
+              "
+                    th:classappend="${iStat.first} ? ' active' : ''">
+            </button>
+        </div>
+        <script th:src="@{/js/banner-slider.js}"></script>
+    </section>
+</div>

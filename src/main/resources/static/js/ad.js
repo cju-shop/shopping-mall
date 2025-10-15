@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('슬라이더 JS 실행됨');
     const sliderTrack = document.querySelector('.slider-track');
     const slides = document.querySelectorAll('.ad-slide');
     const adIndex = document.getElementById('adIndex');

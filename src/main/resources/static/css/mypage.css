@@ -1,0 +1,314 @@
+/* mypage.css */
+
+/* 전체 레이아웃 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 마이페이지 타이틀 섹션 */
+.mypage-title {
+    background: white;
+    padding: 0;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+}
+
+.mypage-title h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #000000;
+}
+
+.mypage-title p {
+    font-size: 16px;
+    color: #000000;
+    margin: 0;
+}
+
+.mypage-title p span {
+    font-weight: 400;
+    color: #000000;
+}
+
+/* 액션 버튼 그룹 - 회색 박스 위쪽에 정렬 */
+.mypage-actions {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.mypage-actions button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    background-color: white;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.mypage-actions button:hover {
+    background-color: #f5f5f5;
+    border-color: #bbb;
+}
+
+/* 주문 내역 섹션 */
+.order-history {
+    background: white;
+    padding: 0;
+}
+
+/* 회색 박스 - 제목, 검색창, 탭 모두 포함 */
+.order-history-header {
+    background-color: #ececec;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.order-history-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: #000000;
+}
+
+/* 검색 입력 - 회색 박스 안 */
+.search-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #999;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+/* 탭 메뉴 스타일 - 회색 박스 안 */
+.order-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #d0d0d0;
+    margin: 0;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: #000;
+}
+
+.tab-button.active {
+    color: #000;
+    font-weight: 600;
+    border-bottom: 2px solid #000;
+}
+
+/* 주문 리스트 */
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* 주문 아이템 */
+.order-item {
+    display: grid;
+    grid-template-columns: auto 100px 1fr 150px;
+    gap: 15px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    background: #ffffff;
+    align-items: center;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+/* 날짜 및 상태 */
+.order-item > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.order-item > div:first-child span:first-child {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.order-item > div:first-child span:last-child {
+    font-size: 13px;
+    color: #666;
+    font-weight: 400;
+}
+
+/* 상품 이미지 */
+.order-item > div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* 상품 정보 */
+.order-item > div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.order-item > div:nth-child(3) strong {
+    font-size: 15px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.order-item > div:nth-child(3) span {
+    font-size: 13px;
+    color: #666;
+}
+
+.order-item > div:nth-child(3) span:last-child {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 2px;
+}
+
+/* 버튼 그룹 */
+.order-item > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-item button {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    background-color: white;
+    color: #333;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.order-item button:hover {
+    background-color: #f5f5f5;
+    border-color: #bbb;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .mypage-actions {
+        position: static;
+        flex-direction: row;
+        margin-top: 10px;
+    }
+
+    .mypage-actions button {
+        flex: 1;
+    }
+
+    .order-history-header {
+        padding: 20px;
+    }
+
+    .order-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .order-list {
+        gap: 0;
+    }
+
+    .order-item:last-child {
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .order-item > div:first-child {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-item > div:nth-child(2) {
+        justify-content: flex-start;
+    }
+
+    .order-item > div:last-child {
+        flex-direction: row;
+    }
+
+    .order-item button {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 20px 15px;
+    }
+
+    .mypage-title {
+        margin-bottom: 30px;
+    }
+
+    .mypage-title h2 {
+        font-size: 20px;
+    }
+}

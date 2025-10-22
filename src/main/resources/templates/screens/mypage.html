@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>마이페이지 | Furniro</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+
+<div th:replace="components/_header :: header"></div>
+
+<main>
+    <section class="mypage-title">
+        <h2>마이페이지</h2>
+        <div class="mypage-actions">
+            <button onclick="location.href='/member/edit'">회원정보 수정</button>
+            <button onclick="location.href='/logout'">로그아웃</button>
+        </div>
+        <p>반갑습니다. <span th:text="${username}"></span>님</p>
+    </section>
+
+    <section class="order-history">
+
+        <div class="order-history-header">
+            <h3>주문 내역</h3>
+
+            <input type="text" class="search-input" placeholder="상품명으로 검색하세요">
+
+            <div class="order-tabs">
+                <button class="tab-button active" data-tab="all">전체</button>
+                <button class="tab-button" data-tab="complete">배송완료</button>
+                <button class="tab-button" data-tab="shipping">배송중</button>
+            </div>
+        </div>
+
+        <div class="order-list">
+            <div class="order-item" th:each="order : ${orders}">
+                <div>
+                    <span th:text="${order.date}"></span>
+                    <span th:text="${order.status}"></span>
+                </div>
+                <div>
+                    <img th:src="${order.productImage}" alt="상품 이미지" width="80">
+                </div>
+                <div>
+                    <strong th:text="${order.productName}"></strong><br>
+                    <span th:text="${order.productOption}"></span><br>
+                    <span th:text="${order.price}"></span>
+                </div>
+                <div>
+                    <button>주문상세</button>
+                    <button>배송조회</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<div th:replace="components/_footer :: footer"></div>
+
+<script>
+    // 탭 전환 기능
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const tabType = this.getAttribute('data-tab');
+
+            // 페이지 새로고침으로 서버에서 필터링된 데이터 가져오기
+            window.location.href = '/mypage?status=' + tabType;
+        });
+    });
+
+    // 페이지 로드 시 현재 탭 활성화
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentStatus = urlParams.get('status') || 'all';
+
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-tab') === currentStatus) {
+                btn.classList.add('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>

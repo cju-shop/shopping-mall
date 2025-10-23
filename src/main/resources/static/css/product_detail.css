@@ -1,0 +1,362 @@
+:root {
+    --text:#222;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --bg:#f8fafc;
+    --brand:#bfa247; /* Funiro 톤 맞춰 골드 계열로 변경 */
+    --dark:#111827;
+    --btn:#111827;
+    --btn-fg:#fff;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    font-family: system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: #fff;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* --- 상단 상세 --- */
+.detail-top {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 28px;
+    padding: 40px 0;
+}
+@media (max-width: 980px) {
+    .detail-top { grid-template-columns: 1fr; }
+}
+
+/* 갤러리 */
+.gallery .preview {
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: var(--bg);
+}
+.gallery .preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.thumbs {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 10px;
+    margin-top: 12px;
+}
+.thumb {
+    width: 100%;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    opacity: .85;
+}
+.thumb.is-active { outline: 2px solid var(--brand); opacity: 1; }
+.thumb:hover { opacity: 1; }
+
+/* 상품 정보 */
+.info .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #111;
+    margin: 20px 0 10px;
+}
+
+.home-icon {
+    width: 28px;  /* 필요시 크기 조절 가능 */
+    height: 28px;
+    vertical-align: middle;
+}
+.title {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 10px 0 15px;
+}
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #111;
+    margin: 20px 0 20px;
+}
+.rating .stars {
+    letter-spacing: 2px;
+    font-size: 24px;
+    transform: translateY(-0.2em);
+}
+.rating .score { font-weight: 800; }
+.rating .count { color: var(--muted); }
+.price {
+    font-size: 23px;
+    font-weight: 900;
+    margin: 20px 0 20px;
+}
+
+/* 옵션 */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 10px;
+}
+
+.opt {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 600;
+}
+.opt select {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 18px;
+}
+
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 25px;
+    font-weight: 500;
+    margin: 30px 0 30px;
+}
+
+.total-price strong {
+    font-size: 25px;
+    font-weight: 900;
+    color: #111;
+}
+
+/* 버튼 */
+.cta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* 공통 버튼 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    height: 52px;
+}
+
+/* 버튼 비율 조정 */
+.btn-dark   { flex: 8; }   /* 바로 구매 */
+.btn-outline { flex: 1; }  /* 장바구니 */
+.icon-only   { flex: 1; }  /* 찜하기 */
+
+/* 스타일 세부 */
+.btn-dark {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+.btn-dark:hover {
+    background: #333;
+}
+
+.btn-outline,
+.icon-only {
+    background: #fff;
+    border: 1px solid #ddd;
+}
+.btn-outline:hover,
+.icon-only:hover {
+    border-color: #bfa247;
+}
+
+/* 아이콘 이미지 크기 */
+.btn img,
+.icon-only img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.meta {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0;
+    display: grid;
+    gap: 6px;
+    color: #111;
+}
+.meta i { margin-right: 6px; color: var(--brand); }
+
+/* 제품 전경 */
+/* 섹션 전체 레이아웃 */
+.hero {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 clamp(16px, 5vw, 40px); /* 반응형 좌우 여백 */
+}
+
+/* 상품 상세 영역 */
+.product-detail {
+    width: 100%;
+    max-width: 780px;  /* 가운데 정렬 및 최대 너비 */
+    text-align: center;
+}
+
+/* 상세 이미지 박스 */
+.product-img-box {
+    width: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-img-box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+/* 🔽 더보기 기능 영역 */
+.product-detail {
+    position: relative;
+}
+
+.product-detail.collapsed .product-img-box:nth-of-type(n+2) {
+    display: none;
+}
+
+/* 버튼 스타일 */
+.toggle-btn {
+    margin: 24px auto 0;
+    padding: 12px 28px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: block;
+}
+
+.toggle-btn:hover {
+    background: #f2f2f2;
+}
+
+/* 탭 헤더 */
+.pd-tablist {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    border-bottom: 1px solid #e5e5e9;
+    margin: 32px 0 16px;
+}
+.pd-tab {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #777;
+    cursor: pointer;
+    position: relative;
+    line-height: 1;
+}
+.pd-tab.is-active {
+    color: #111;
+}
+.pd-tab.is-active::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -1px;
+    width: 100%; height: 2px;
+    background: #111;           /* 활성 탭 밑줄 */
+}
+
+.pd-tab .badge {
+    margin-left: 6px;
+    font-size: 13px;
+    color: #999;
+}
+
+/* 탭 패널 */
+.pd-panel { display: none; padding: 16px 0 0; }
+.pd-panel.is-active { display: block; }
+
+/* 리뷰/Q&A 샘플 스타일 약간 */
+.review-item { padding: 16px 0; border-bottom: 1px solid #f0f0f3; }
+.rv-head { display: flex; gap: 8px; align-items: center; color:#333; }
+.rv-body { margin-top: 6px; color:#444; }
+
+.qa-item { padding: 16px 0; border-bottom: 1px solid #f0f0f3; }
+.q, .a { margin: 6px 0; color:#333; }
+
+/* 별/숫자 정렬 살짝 보정 (이모지 baseline 차이용) */
+.stars { display:inline-block; line-height:1; transform: translateY(-0.05em); }
+
+
+/* --- 관련 상품 --- */
+.related-products {
+    max-width: 1200px;             /* 전체 영역 폭 제한 */
+    padding: 0 clamp(16px, 4vw, 40px);
+    margin-bottom: 200px;
+}
+
+.related-products h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+/* 상품 카드 컨테이너 */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+/* 상품 카드 */
+.product-card {
+    background: #fff;
+    overflow: hidden;
+    text-align: left;
+    width: 100%;
+    max-width: 220px;               /* 카드 최대 폭 제한 */
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-card .name {
+    font-size: 15px;
+    margin: 10px 5px;
+}
+
+.product-card .price {
+    font-weight: 700;
+    color: #111;
+    margin: 10px 5px;
+}

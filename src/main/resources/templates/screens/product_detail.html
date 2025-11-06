@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>상품 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/product_detail.css}">
+</head>
+<body>
+<div th:replace="components/_header :: header"></div>
+<main class="container">
+    <section class="detail-top">
+        <div class="gallery">
+            <div class="preview">
+                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/800/600'"
+                     alt="상품 이미지" id="previewImg">
+            </div>
+
+            <div class="thumbs" id="thumbs">
+                <!-- 썸네일들(샘플 5장). 필요 시 서버에서 주입 가능 -->
+                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/200/150'"
+                     alt="썸네일1" class="thumb is-active">
+                <img src="https://picsum.photos/seed/102/200/150" alt="썸네일2" class="thumb">
+                <img src="https://picsum.photos/seed/103/200/150" alt="썸네일3" class="thumb">
+                <img src="https://picsum.photos/seed/104/200/150" alt="썸네일4" class="thumb">
+                <img src="https://picsum.photos/seed/105/200/150" alt="썸네일5" class="thumb">
+            </div>
+        </div>
+
+        <div class="info">
+            <p class="breadcrumb">
+                    <img src="/img/icons/ic_outline-home.png" alt="홈 아이콘" class="home-icon">
+                    젠티스
+
+            </p>
+
+            <h1 class="title" th:text="${product != null} ? ${product.name} : 'More Square Fabric Bed'">More Square Fabric Bed</h1>
+
+            <p class="price">
+                <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">금액</span>
+            </p>
+
+            <div class="rating">
+                <span class="stars" aria-label="별점 4.8/5">⭐⭐⭐⭐⭐</span>
+                <span class="score">4.8</span>
+                <span class="count">(124)</span>
+            </div>
+
+            <div class="options">
+                <label class="opt">
+                    <select>
+                        <option value="" disabled selected hidden>색상을 선택하세요</option>
+                        <option>아이보리</option>
+                        <option>그레이</option>
+                        <option>베이지</option>
+                    </select>
+                </label>
+
+                <label class="opt">
+                    <select>
+                        <option value="" disabled selected hidden>사이즈를 선택하세요</option>
+                        <option>S</option>
+                        <option>M</option>
+                        <option>L</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <div class="total-price">
+                <p>총 상품 금액</p>
+                <strong>0원</strong>
+            </div>
+
+
+            <div class="cta">
+                <button class="btn btn-dark">바로 구매</button>
+
+                <!-- 장바구니 버튼 -->
+                <button class="btn btn-outline">
+                    <img src="/img/icons/ant-design_shopping-cart-outlined.png" alt="장바구니" class="cart-icon">
+                </button>
+
+                <!-- 찜하기 버튼 -->
+                <button class="btn icon-only like-btn" aria-label="찜하기">
+                    <img src="/img/icons/heart-outline.png" alt="찜하기" class="heart-icon">
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="tabs">
+
+    </section>
+
+    <section class="hero">
+        <div class="product-detail">
+            <div class="product-img-box">
+                <img th:src="@{/img/product_detail/test1.png}" alt="제품 전경">
+            </div>
+            <div class="product-img-box">
+                <img th:src="@{/img/product_detail/test2.png}" alt="제품 전경">
+            </div>
+            <div class="product-img-box">
+                <img th:src="@{/img/product_detail/test3.png}" alt="제품 전경">
+            </div>
+            <button id="toggle-btn" class="toggle-btn">상품정보 더보기 ˅</button>
+        </div>
+    </section>
+    <section class="related-products">
+        <h3>이런 상품은 어때요?</h3>
+        <div class="product-list">
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/201/360/480" alt="">
+                <p class="name">패브릭 체어</p>
+                <p class="price">126,540원</p>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/202/480/360" alt="">
+                <p class="name">로우 테이블</p>
+                <p class="price">400,500원</p>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/203/480/360" alt="">
+                <p class="name">우드 협탁</p>
+                <p class="price">123,120원</p>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/204/480/360" alt="">
+                <p class="name">라탄 바스켓</p>
+                <p class="price">986,120원</p>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/205/480/360" alt="">
+                <p class="name">코튼 러그</p>
+                <p class="price">396,540원</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+<div th:replace="~{components/_footer}"></div>
+<script th:src="@{/js/product_detail.js}"></script>
+</body>
+</html>

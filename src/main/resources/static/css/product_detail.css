@@ -360,3 +360,323 @@ body {
     color: #111;
     margin: 10px 5px;
 }
+.tabs {
+    border-bottom: 1px solid #e0e0e0;
+    margin: 40px 0 20px;
+}
+
+.tab-menu {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tab-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-item:hover {
+    color: #333;
+}
+
+.tab-item.active {
+    color: #000;
+    border-bottom: 3px solid #000;
+}
+/* 모든 탭 콘텐츠 숨기기 */
+.tab-content-section {
+    display: none;
+}
+
+/* active 클래스가 있는 콘텐츠만 보이기 */
+.tab-content-section.active {
+    display: block;
+}
+
+.reviews-container {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 리뷰 요약 섹션 */
+.review-summary {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.summary-left h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.overall-rating {
+    margin: 10px 0;
+}
+
+.overall-rating .stars {
+    font-size: 28px;
+    color: #ffc107;
+}
+
+.rating-text {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* 리뷰 카드 */
+.review-card {
+    margin-bottom: 30px;
+    padding: 20px 0;
+}
+
+/* 리뷰 헤더 (프로필 + 이름 + 별점) */
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+}
+
+.reviewer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reviewer-details strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.review-stars {
+    font-size: 14px;
+    color: #ffc107;
+}
+
+/* 리뷰 이미지 */
+.review-images {
+    margin: 15px 0;
+}
+
+.review-img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* 리뷰 텍스트 */
+.review-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin: 15px 0;
+}
+
+/* 구분선 */
+.review-divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* 리뷰 없을 때 */
+.no-reviews {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+    font-size: 16px;
+}
+
+/* Q&A 컨테이너 */
+.qna-container {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 질문 입력 폼 */
+.qna-input-box {
+    margin-bottom: 30px;
+}
+
+.qna-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.qna-textarea::placeholder {
+    color: #999;
+}
+
+.qna-textarea:focus {
+    outline: none;
+    border-color: #888;
+}
+
+/* Q&A 아이템 */
+.qna-item {
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+}
+
+/* 질문/답변 헤더 공통 */
+.qna-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px;
+}
+
+/* 질문 헤더 */
+.qna-header.qna-question {
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.qna-header.qna-question:hover {
+    background-color: #ebebeb;
+}
+
+/* 답변 헤더 */
+.qna-header.qna-answer {
+    background-color: #fff9f0;
+    border-top: 1px solid #e0e0e0;
+    cursor: default;
+}
+
+/* 뱃지 스타일 */
+.qna-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #888;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* 답변 뱃지 */
+.qna-badge.answer-badge {
+    background-color: #c77d2e;
+}
+
+/* Q&A 텍스트 영역 */
+.qna-text {
+    flex: 1;
+}
+
+.qna-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.qna-text p:first-child {
+    font-weight: 500;
+}
+
+/* 질문 상세 */
+.question-detail {
+    font-size: 13px !important;
+    color: #666 !important;
+    margin-top: 8px !important;
+    font-weight: 400 !important;
+}
+
+/* 답변 영역 (토글) */
+.qna-answer-detail {
+    display: none;
+}
+
+/* 답변 대기 중 */
+.qna-waiting {
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.waiting-text {
+    font-size: 13px;
+    color: #999;
+    font-style: italic;
+}
+
+/* 더보기 버튼 */
+.qna-more-btn-wrap {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.qna-more-btn {
+    padding: 14px 50px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.qna-more-btn:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+}
+
+/* Q&A 없을 때 */
+.no-qna {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+    font-size: 16px;
+}
+

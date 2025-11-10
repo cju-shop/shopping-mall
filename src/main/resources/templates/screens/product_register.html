@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <script>
+        // 옵션 타입 블록 생성
+        function createOptionTypeRow(idx, typeName = "", values = []) {
+            const wrap = document.createElement("div");
+            wrap.dataset.index = idx;
+            wrap.innerHTML = `
+        <div>
+          <strong>옵션 타입명:</strong>
+          <input type="text" name="optionTypes[${idx}].name" placeholder="예: 색상 / 사이즈" value="${typeName}">
+          <button type="button" onclick="this.parentElement.parentElement.remove(); renumber();">옵션 타입 삭제</button>
+        </div>
+        <div class="values">
+          <!-- 값들이 여기 들어감 -->
+        </div>
+        <div>
+          <button type="button" onclick="addValueRow(this)">값 추가</button>
+        </div>
+        <hr>
+      `;
+            // 초기 값들 채우기
+            const valuesBox = wrap.querySelector(".values");
+            values.forEach((v, i) => valuesBox.appendChild(makeValueRow(idx, i, v)));
+            if (values.length === 0) valuesBox.appendChild(makeValueRow(idx, 0, ""));
+            return wrap;
+        }
+
+        // 옵션 값 입력행 생성
+        function makeValueRow(optIdx, valIdx, value = "") {
+            const row = document.createElement("div");
+            row.className = "value-row";
+            row.innerHTML = `
+        값: <input type="text" name="optionTypes[${optIdx}].values[${valIdx}].value" placeholder="예: 브라운 / S" value="${value}">
+        <button type="button" onclick="this.parentElement.remove(); renumber();">삭제</button>
+      `;
+            return row;
+        }
+
+        // 값 추가 버튼
+        function addValueRow(btn) {
+            const optWrap = btn.closest("div").parentElement; // 옵션타입 래퍼
+            const optIdx = parseInt(optWrap.dataset.index, 10);
+            const valuesBox = optWrap.querySelector(".values");
+            const nextValIdx = valuesBox.querySelectorAll(".value-row").length;
+            valuesBox.appendChild(makeValueRow(optIdx, nextValIdx, ""));
+        }
+
+        // 인덱스 재정렬 (삭제 후 name 인덱스 정리)
+        function renumber() {
+            const types = document.querySelectorAll("#optionTypes .opt-wrap");
+            types.forEach((wrap, i) => {
+                wrap.dataset.index = i;
+                // 타입명 name 갱신
+                const typeInput = wrap.querySelector(`input[name^="optionTypes["]`);
+                typeInput.name = `optionTypes[${i}].name`;
+                // 값들 name 갱신
+                const rows = wrap.querySelectorAll(".value-row");
+                rows.forEach((row, j) => {
+                    const input = row.querySelector('input[name^="optionTypes["]');
+                    input.name = `optionTypes[${i}].values[${j}].value`;
+                });
+            });
+        }
+
+        // 옵션 타입 추가
+        function addOptionType() {
+            const box = document.getElementById("optionTypes");
+            const idx = box.querySelectorAll(".opt-wrap").length;
+            const wrap = createOptionTypeRow(idx, "", []);
+            wrap.classList.add("opt-wrap");
+            box.appendChild(wrap);
+            renumber();
+        }
+
+        // 초기 세팅(색상/사이즈 예시)
+        document.addEventListener("DOMContentLoaded", () => {
+            const box = document.getElementById("optionTypes");
+
+            const color = createOptionTypeRow(0, "색상", ["브라운", "블랙"]);
+            color.classList.add("opt-wrap");
+            box.appendChild(color);
+
+            const size = createOptionTypeRow(1, "사이즈", ["S", "M", "L"]);
+            size.classList.add("opt-wrap");
+            box.appendChild(size);
+        });
+    </script>
+</head>
+<body>
+<h1>상품 등록</h1>
+
+<form action="/seller/product/register" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="category">상위 카테고리:</label>
+        <select id="category" name="category" required>
+            <option value="">선택하세요</option>
+            <option value="clothes">아우터</option>
+            <option value="electronics">상의</option>
+            <option value="beauty">바지</option>
+            <option value="food">원피스</option>
+            <option value="food">스커트</option>
+            <option value="food">신발</option>
+            <option value="food">가방</option>
+        </select>
+    </div>
+
+    <div>
+        <label>하위 카테고리명:</label>
+        <input type="text" name="childrenName" placeholder="예: 자켓">
+    </div>
+    <div>
+        <label for="name">상품명:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+
+    </div>
+
+    <div>
+        <label for="price">가격:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+
+    <div>
+        <label for="image">상품 이미지:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+    </div>
+
+    <h3>옵션</h3>
+    <div id="optionTypes"></div>
+    <button type="button" onclick="addOptionType()">옵션 타입 추가</button>
+
+    <div>
+        <button type="submit">등록하기</button>
+    </div>
+</form>
+</body>
+</html>

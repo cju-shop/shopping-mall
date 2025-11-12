@@ -1,7 +1,9 @@
 package com.cju.shoppingmall.product.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.cju.shoppingmall.controller.ProductRegisterForm;
 import org.springframework.stereotype.Service;
 
 import com.cju.shoppingmall.product.entity.Category;
@@ -33,5 +35,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getNewProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
+    }
+
+    public Long register(ProductRegisterForm form, String createdBy){
+        return null;
     }
 }

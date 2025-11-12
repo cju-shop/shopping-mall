@@ -10,7 +10,7 @@ import java.util.List;
 @Getter @Setter
 public class ProductRegisterForm {
     private String category;
-    private String childrenName;
+    private String childrenCategory;
     private String name;
     private Long price;
     private MultipartFile image;

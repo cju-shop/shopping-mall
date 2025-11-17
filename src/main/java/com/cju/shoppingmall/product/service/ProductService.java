@@ -10,5 +10,7 @@ public interface ProductService {
 
     Category createCategory(Category category);
 
+    List<Product> getDailyRecommentProducts();
+
     List<Product> getNewProducts();
 }

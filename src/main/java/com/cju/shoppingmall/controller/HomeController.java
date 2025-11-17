@@ -46,26 +46,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<Product> dailyRecommentProducts = productService.getNewProducts();
-        List<Map<String, Object>> bestProducts = new ArrayList<>();
-        List<Map<String, Object>> newProducts = new ArrayList<>();
-
-        for (int i = 1; i <= 8; i++) {
-            Map<String, Object> p = new HashMap<>();
-            p.put("id", i);
-            p.put("name", "라이트 니트 카디건 #" + i);
-            p.put("basePrice", 39900 + (i % 5) * 1000);
-            p.put("thumbnail", "https://picsum.photos/seed/" + i + "/600/450");
-            bestProducts.add(p);
-        }
-        for (int i = 1; i <= 8; i++) {
-            Map<String, Object> p = new HashMap<>();
-            p.put("id", i);
-            p.put("name", "라이트 니트 카디건 #" + i);
-            p.put("basePrice", 39900 + (i % 5) * 1000);
-            p.put("thumbnail", "https://picsum.photos/seed/" + i + "/600/450");
-            newProducts.add(p);
-        }
+        List<Product> dailyRecommentProducts = productService.getDailyRecommentProducts();
+        List<Product> newProducts = productService.getNewProducts();
 
         List<Map<String, String>> banners = new ArrayList<>();
         banners.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/ad1", "alt", "제휴사 광고 1"));
@@ -82,7 +64,6 @@ public class HomeController {
         model.addAttribute("ads", ads);
 
         model.addAttribute("todayRecommendProducts", dailyRecommentProducts);
-        model.addAttribute("bestProducts", bestProducts);
         model.addAttribute("newProducts", newProducts);
         return "screens/home";
     }

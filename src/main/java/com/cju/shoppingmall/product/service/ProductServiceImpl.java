@@ -1,5 +1,6 @@
 package com.cju.shoppingmall.product.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,7 +32,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getNewProducts() {
+    public List<Product> getDailyRecommentProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public List<Product> getNewProducts() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+
+        List<Product> newProducts =
+                repository.findTop8ByCreatedAtAfterOrderByCreatedAtDesc(sevenDaysAgo);
+
+        if (newProducts.isEmpty()) {
+            return repository.findTop8ByOrderByCreatedAtDesc();
+        }
+
+        return newProducts;
     }
 }

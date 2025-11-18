@@ -13,14 +13,16 @@
     <section class="detail-top">
         <div class="gallery">
             <div class="preview">
-                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/800/600'"
-                     alt="상품 이미지" id="previewImg">
+                <img th:src="${product != null ? product.thumbnail : 'https://picsum.photos/seed/101/800/600'}"
+                     alt="상품 이미지" id="previewImg"/>
+
             </div>
 
             <div class="thumbs" id="thumbs">
                 <!-- 썸네일들(샘플 5장). 필요 시 서버에서 주입 가능 -->
-                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/200/150'"
+                <img th:src="${product != null ? product.thumbnail : 'https://picsum.photos/seed/101/200/150'}"
                      alt="썸네일1" class="thumb is-active">
+
                 <img src="https://picsum.photos/seed/102/200/150" alt="썸네일2" class="thumb">
                 <img src="https://picsum.photos/seed/103/200/150" alt="썸네일3" class="thumb">
                 <img src="https://picsum.photos/seed/104/200/150" alt="썸네일4" class="thumb">
@@ -38,7 +40,7 @@
             <h1 class="title" th:text="${product != null} ? ${product.name} : 'More Square Fabric Bed'">More Square Fabric Bed</h1>
 
             <p class="price">
-                <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">금액</span>
+                <span th:text="${#numbers.formatInteger(product.basePrice, 3, 'COMMA')} + '원'">금액</span>
             </p>
 
             <div class="rating">
@@ -94,7 +96,7 @@
         <ul class="tab-menu">
             <li class="tab-item active" data-tab="info">상품정보</li>
             <li class="tab-item" data-tab="review">
-                리뷰 (<span th:text="${reviews != null ? reviews.size() : 0}">0</span>)
+                리뷰 (<span th:text="${reviewList != null ? reviewList.size() : 0}">0</span>)
             </li>
             <li class="tab-item" data-tab="qna">
                 Q&A (<span th:text="${qnaList != null ? qnaList.size() : 0}">0</span>)
@@ -121,13 +123,13 @@
             <h2>상품 리뷰</h2>
 
             <!-- Controller에서 전달한 reviews 리스트를 반복 출력 -->
-            <div th:each="review : ${reviews}" class="review-card">
+            <div th:each="review : ${reviewList}" class="review-card">
                 <div class="review-header">
                     <div class="reviewer-info">
                         <img src="https://via.placeholder.com/50" alt="프로필" class="profile-img">
                         <div class="reviewer-details">
                             <!-- review.user 값 출력 -->
-                            <strong th:text="${review.user}">사용자명</strong>
+                            <strong th:text="${review.member}">사용자명</strong>
                             <div class="review-stars">⭐⭐⭐⭐⭐</div>
                         </div>
                     </div>
@@ -144,7 +146,9 @@
         <div class="qna-container">
             <!-- 질문 입력 폼 -->
             <div class="qna-input-box">
-                <textarea placeholder="문의 내용을 작성해주세요" class="qna-textarea"></textarea>
+                <label>
+                    <textarea placeholder="문의 내용을 작성해주세요" class="qna-textarea"></textarea>
+                </label>
             </div>
 
             <!-- Q&A 리스트 -->

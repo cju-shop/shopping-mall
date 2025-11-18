@@ -16,4 +16,4 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: classpath:category_data.sql
+      data-locations: classpath:member_data.sql, classpath:category_data.sql, classpath:product_data.sql

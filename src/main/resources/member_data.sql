@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS=0;
 
+TRUNCATE TABLE affiliate_ad;
 TRUNCATE TABLE product_review;
 TRUNCATE TABLE product_qna;
 TRUNCATE TABLE product_variant_option;

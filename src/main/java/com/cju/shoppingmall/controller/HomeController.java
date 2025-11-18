@@ -14,18 +14,24 @@ import com.cju.shoppingmall.member.entity.MemberRole;
 import com.cju.shoppingmall.member.service.MemberService;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.Product;
+import com.cju.shoppingmall.product.entity.AffiliateAd;
+
 import com.cju.shoppingmall.product.service.ProductService;
+import com.cju.shoppingmall.product.service.AffiliateAdService;
 
 @Controller
 public class HomeController {
 
     private final ProductService productService;
     private final MemberService memberService;
+    private final AffiliateAdService affiliateAdService;
 
-    public HomeController(ProductService productService, MemberService memberService) {
+    public HomeController(ProductService productService, MemberService memberService, AffiliateAdService affiliateAdService) {
         this.productService = productService;
         this.memberService = memberService;
+        this.affiliateAdService = affiliateAdService;
     }
+
 
     @GetMapping("/create/home-data")
     public String prepareHomeData() {
@@ -67,12 +73,9 @@ public class HomeController {
             newProducts.add(p);
         }
 
-        List<Map<String, String>> banners = new ArrayList<>();
-        banners.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/ad1", "alt", "제휴사 광고 1"));
-        banners.add(Map.of("img", "/img/ad2.jpg", "href", "https://example.com/ad2", "alt", "제휴사 광고 2"));
-        banners.add(Map.of("img", "/img/ad3.jpg", "href", "https://example.com/ad3", "alt", "제휴사 광고 3"));
+        List<AffiliateAd> banners = affiliateAdService.getActiveAds();
 
-        //제품광고(ad) 리스트
+        //제품광고(ad) 리스트 (상단)
         List<Map<String, String>> ads = new ArrayList<>();
         ads.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/productAd1", "alt", "제품 광고 1"));
         ads.add(Map.of("img", "/img/ad2.jpg", "href", "https://example.com/productAd2", "alt", "제품 광고 2"));

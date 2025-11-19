@@ -13,4 +13,5 @@ public interface ProductService {
     List<Product> getDailyRecommentProducts();
 
     List<Product> getNewProducts();
+    List<Product> getBestProductsLast7Days(int limit);
 }

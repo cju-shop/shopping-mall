@@ -48,6 +48,7 @@ public class HomeController {
     public String home(Model model) {
         List<Product> dailyRecommentProducts = productService.getDailyRecommentProducts();
         List<Product> newProducts = productService.getNewProducts();
+        List<Product> bestProducts = productService.getBestProductsLast7Days(8);
 
         List<Map<String, String>> banners = new ArrayList<>();
         banners.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/ad1", "alt", "제휴사 광고 1"));
@@ -65,6 +66,7 @@ public class HomeController {
 
         model.addAttribute("todayRecommendProducts", dailyRecommentProducts);
         model.addAttribute("newProducts", newProducts);
+        model.addAttribute("bestProducts", bestProducts);
         return "screens/home";
     }
 

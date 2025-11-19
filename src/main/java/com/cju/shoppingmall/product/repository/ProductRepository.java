@@ -10,7 +10,9 @@ import com.cju.shoppingmall.product.entity.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    List<Product> findByIdIn(List<Long> ids);
     List<Product> findTop4ByOrderByCreatedAtDesc();
     List<Product> findTop8ByCreatedAtAfterOrderByCreatedAtDesc(LocalDateTime date);
     List<Product> findTop8ByOrderByCreatedAtDesc();
+
 }

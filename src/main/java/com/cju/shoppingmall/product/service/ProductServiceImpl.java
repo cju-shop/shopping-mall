@@ -1,13 +1,9 @@
 package com.cju.shoppingmall.product.service;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
 
-import com.cju.shoppingmall.controller.ProductRegisterForm;
+import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
-import com.cju.shoppingmall.member.repository.MemberRepository;
 import com.cju.shoppingmall.product.entity.*;
 import com.cju.shoppingmall.product.repository.*;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.cju.shoppingmall.product.service;
 
 import java.util.List;
 
+import com.cju.shoppingmall.member.repository.MemberRepository;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionTypeForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionValueForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
@@ -17,18 +18,20 @@ public class ProductServiceImpl implements ProductService {
     private final OptionTypeRepository optionTypeRepository;
     private final OptionValueRepository optionValueRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final MemberRepository memberRepository;
 
     public ProductServiceImpl(ProductRepository repository,
                               CategoryRepository categoryRepository,
                               OptionTypeRepository optionTypeRepository,
                               OptionValueRepository optionValueRepository,
-                              ProductOptionRepository productOptionRepository
-                              ) {
+                              ProductOptionRepository productOptionRepository,
+                              MemberRepository memberRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.optionTypeRepository = optionTypeRepository;
         this.optionValueRepository = optionValueRepository;
         this.productOptionRepository = productOptionRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -48,7 +51,9 @@ public class ProductServiceImpl implements ProductService {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
 
-    public Long register(ProductRegisterForm form, Member createdBy) {
+    public Long register(ProductRegisterForm form) {
+        Member createdBy = memberRepository.findByUsername("admin")
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저 없음"));
 
         Long childId = form.getChildCategoryId();
         if (childId == null) {
@@ -73,12 +78,12 @@ public class ProductServiceImpl implements ProductService {
         if (form.getOptionTypes() != null) {
 
             for (OptionTypeForm typeForm : form.getOptionTypes()) {
-                String name = typeForm.getName();
+                String typeName = typeForm.getName();
 
                 OptionType optionType = optionTypeRepository
-                        .findByName(name)
+                        .findByName(typeName)
                         .orElseGet(() -> {
-                            OptionType type = new OptionType(name,name);
+                            OptionType type = new OptionType(typeName,typeName);
                             return optionTypeRepository.save(type);
                         });
 
@@ -93,13 +98,13 @@ public class ProductServiceImpl implements ProductService {
 
                 if (typeForm.getValues() != null) {
                     for (OptionValueForm valueForm : typeForm.getValues()) {
-                        String value = valueForm.getValue();
+                        String valueName = valueForm.getValue();
 
                         optionValueRepository
-                                .findByOptionTypeIdAndValue(optionType.getId(), value)
+                                .findByOptionTypeIdAndValue(optionType.getId(), valueName)
                                 .orElseGet(() -> {
-                                    OptionValue ov = new OptionValue(optionType,value);
-                                    return optionValueRepository.save(ov);
+                                    OptionValue value = new OptionValue(optionType,valueName);
+                                    return optionValueRepository.save(value);
                                 });
                     }
                 }

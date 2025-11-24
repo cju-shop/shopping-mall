@@ -14,5 +14,5 @@ public interface ProductService {
 
     List<Product> getNewProducts();
 
-    Long register(ProductRegisterForm form, Member createdBy);
+    Long register(ProductRegisterForm form);
 }

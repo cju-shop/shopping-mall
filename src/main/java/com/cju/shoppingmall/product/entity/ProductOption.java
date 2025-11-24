@@ -9,7 +9,6 @@ import jakarta.persistence.ManyToOne;
 import lombok.Setter;
 
 @Entity
-@Setter
 @IdClass(ProductOptionId.class)
 public class ProductOption {
     @Id
@@ -21,4 +20,12 @@ public class ProductOption {
     @JoinColumn(name = "option_type_id")
     private OptionType optionType;
 
+    public ProductOption(Product product, OptionType optionType) {
+        this.product = product;
+        this.optionType = optionType;
+    }
+
+    public ProductOption() {
+
+    }
 }

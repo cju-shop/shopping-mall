@@ -22,10 +22,10 @@ public class ProductRegisterController {
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
 
-    public ProductRegisterController(ProductService productService,MemberRepository memberRepository, CategoryRepository categoryRepositoryq) {
+    public ProductRegisterController(ProductService productService,MemberRepository memberRepository, CategoryRepository categoryRepository) {
         this.productService = productService;
         this.memberRepository = memberRepository;
-        this.categoryRepository = categoryRepositoryq;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping("/product/register")

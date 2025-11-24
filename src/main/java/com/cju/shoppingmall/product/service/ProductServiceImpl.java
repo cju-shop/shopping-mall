@@ -2,6 +2,8 @@ package com.cju.shoppingmall.product.service;
 
 import java.util.List;
 
+import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionTypeForm;
+import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionValueForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.product.entity.*;
@@ -46,68 +48,65 @@ public class ProductServiceImpl implements ProductService {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
 
-    public Long register(ProductRegisterForm form, Member createdBy){
-        String childName = form.getChildrenCategory() == null ? null : form.getChildrenCategory().trim();
-        Category target;
-        if (childName != null && !childName.isEmpty()) {
-            target = categoryRepository.findByName(childName)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException("해당 하위 카테고리를 찾을 수 없습니다: " + childName));
-        } else {
-            throw new IllegalArgumentException("카테고리 정보가 없습니다.");
+    public Long register(ProductRegisterForm form, Member createdBy) {
+
+        Long childId = form.getChildCategoryId();
+        if (childId == null) {
+            throw new IllegalArgumentException("하위 카테고리가 선택되지 않았습니다.");
         }
+
+        Category category = categoryRepository.findById(childId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("해당 하위 카테고리를 찾을 수 없습니다. id=" + childId));
 
         Product product = new Product(
                 form.getName(),
                 "test.jpg",
-                null,
+                null,  // thumbnail
                 form.getPrice(),
-                target,
+                category,
                 createdBy
         );
 
-        Product saved = repository.save(product);
+        Product savedProduct = repository.save(product);
 
         if (form.getOptionTypes() != null) {
-            for (ProductRegisterForm.OptionTypeForm typeForm : form.getOptionTypes()) {
-                String name = typeForm.getName();  // 예: "color" 또는 "size"
+
+            for (OptionTypeForm typeForm : form.getOptionTypes()) {
+                String name = typeForm.getName();
 
                 OptionType optionType = optionTypeRepository
                         .findByName(name)
                         .orElseGet(() -> {
-                            OptionType t = new OptionType();
-                            t.setName(name);
-                            t.setDisplayName(name);
-                            return optionTypeRepository.save(t);
+                            OptionType type = new OptionType(name,name);
+                            return optionTypeRepository.save(type);
                         });
 
-                // 2️⃣ 옵션 값 등록
+
+                boolean productHasOptionType  = productOptionRepository
+                        .existsByProductIdAndOptionTypeId(savedProduct.getId(), optionType.getId());
+
+                if (!productHasOptionType ) {
+                    ProductOption productOption = new ProductOption(savedProduct,optionType);
+                    productOptionRepository.save(productOption);
+                }
+
                 if (typeForm.getValues() != null) {
-                    for (ProductRegisterForm.OptionValueForm vf : typeForm.getValues()) {
-                        String val = vf.getValue();
-                        if (val == null || val.isBlank()) continue;
+                    for (OptionValueForm valueForm : typeForm.getValues()) {
+                        String value = valueForm.getValue();
 
                         optionValueRepository
-                                .findByOptionTypeIdAndValue(optionType.getId(), val)
+                                .findByOptionTypeIdAndValue(optionType.getId(), value)
                                 .orElseGet(() -> {
-                                    OptionValue ov = new OptionValue();
-                                    ov.setOptionType(optionType);
-                                    ov.setValue(val);
+                                    OptionValue ov = new OptionValue(optionType,value);
                                     return optionValueRepository.save(ov);
                                 });
                     }
                 }
-
-                boolean exists = productOptionRepository
-                        .existsByProductIdAndOptionTypeId(saved.getId(), optionType.getId());
-                if (!exists) {
-                    ProductOption po = new ProductOption();
-                    po.setProduct(saved);
-                    po.setOptionType(optionType);
-                    productOptionRepository.save(po);
-                }
             }
         }
-        return product.getId();
+
+        return savedProduct.getId();
     }
+
 }

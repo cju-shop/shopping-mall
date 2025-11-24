@@ -5,9 +5,6 @@
     <title>상품 등록</title>
 
     <script>
-        // ============================
-        // 1. 카테고리 하위 조회 (DB)
-        // ============================
         async function loadChildCategories(parentId) {
             const childSelect = document.getElementById("childCategory");
             childSelect.innerHTML = `<option value="">(선택 안 함)</option>`;
@@ -33,10 +30,6 @@
             }
         }
 
-        // ============================
-        // 2. 옵션 타입 / 값 관리
-        // ============================
-        // 예: [{ name:"사이즈", values:["Free","L"] }, { name:"색상", values:["Green","Beige"] }]
         let optionTypes = [];
 
         function addOptionType() {
@@ -63,7 +56,6 @@
             renderOptionTypes();
             renderCombination();
         }
-
         function renderOptionTypes() {
             const area = document.getElementById("optionTypeArea");
             area.innerHTML = "";
@@ -71,13 +63,14 @@
             optionTypes.forEach((opt, i) => {
                 const box = document.createElement("div");
                 box.style.margin = "12px 0";
+
                 box.innerHTML = `
                     <div>
                         <strong>옵션명:</strong>
                         <input type="text"
                                value="${opt.name}"
                                placeholder="예: 사이즈"
-                               oninput="optionTypes[${i}].name=this.value; renderCombination();">
+                               oninput="optionTypes[${i}].name=this.value; renderOptionTypes(); renderCombination();">
                         <button type="button" onclick="removeOptionType(${i})">옵션 삭제</button>
                     </div>
 
@@ -89,21 +82,36 @@
                     </div>
 
                     <div style="margin-top:6px;">
-                        ${opt.values.map((v, vi) =>
-                    `<span style="display:inline-block;background:#eee;padding:4px 8px;margin:2px;border-radius:4px;">
-                                ${v}
-                                <button type="button" onclick="removeOptionValue(${i},${vi})">x</button>
-                             </span>`
-                ).join("")}
+                        ${
+                    opt.values.map((v, vi) =>
+                        `<span style="display:inline-block;background:#eee;padding:4px 8px;margin:2px;border-radius:4px;">
+                                    ${v}
+                                    <button type="button" onclick="removeOptionValue(${i},${vi})">x</button>
+                                 </span>`
+                    ).join("")
+                }
                     </div>
                 `;
+
+                const hidden = document.createElement("div");
+                hidden.style.display = "none";
+
+                let hiddenHtml = `<input type="hidden" name="optionTypes[${i}].name" value="${opt.name}">`;
+                opt.values.forEach((v, vi) => {
+                    hiddenHtml += `
+                        <input type="hidden"
+                               name="optionTypes[${i}].values[${vi}].value"
+                               value="${v}">
+                    `;
+                });
+
+                hidden.innerHTML = hiddenHtml;
+                box.appendChild(hidden);
+
                 area.appendChild(box);
             });
         }
 
-        // ============================
-        // 3. 옵션 조합(Free × Green 등) 테이블
-        // ============================
         function renderCombination() {
             const body = document.getElementById("optionCombinationBody");
             body.innerHTML = "";
@@ -111,7 +119,6 @@
             if (optionTypes.length === 0) return;
             if (optionTypes.some(opt => opt.values.length === 0)) return;
 
-            // 모든 조합 계산
             let combinations = optionTypes[0].values.map(v => [v]);
 
             for (let i = 1; i < optionTypes.length; i++) {
@@ -129,34 +136,23 @@
                 const label = comb.join(" × ");
 
                 tr.innerHTML = `
-                    <td>
-                        ${label}
-                        <input type="hidden" name="options[${idx}].name" value="${label}">
-                    </td>
-                    <td><input type="number" name="options[${idx}].extraPrice" value="0"></td>
-                    <td><input type="number" name="options[${idx}].stock" value="0"></td>
-                    <td>
-                        <input type="checkbox" name="options[${idx}].active" checked>
-                    </td>
-                    <td>
-                        <button type="button" onclick="this.closest('tr').remove();">삭제</button>
-                    </td>
+                    <td>${label}</td>
+                    <td><input type="number" value="0"></td>
+                    <td><input type="number" value="0"></td>
+                    <td><input type="checkbox" checked></td>
+                    <td><button type="button" onclick="this.closest('tr').remove();">삭제</button></td>
                 `;
                 body.appendChild(tr);
             });
         }
 
-        // ============================
-        // 4. 초기화
-        // ============================
+
         document.addEventListener("DOMContentLoaded", () => {
-            // 카테고리 변경 시 하위 카테고리 로드
             document.getElementById("category").addEventListener("change", (e) => {
                 const parentId = e.target.value;
                 loadChildCategories(parentId);
             });
 
-            // 기본 옵션 타입 2개 예시 (사이즈, 색상)
             optionTypes = [
                 { name: "사이즈", values: ["Free", "L"] },
                 { name: "색상", values: ["Green", "Beige"] }
@@ -203,18 +199,12 @@
         <input type="file" id="image" name="image" accept="image/*" required>
     </div>
 
-    <!-- ===================== -->
-    <!--  옵션 영역 (최종)     -->
-    <!-- ===================== -->
     <h3>옵션</h3>
 
-    <!-- 옵션 타입 & 항목 입력 -->
     <div id="optionTypeArea"></div>
     <button type="button" onclick="addOptionType()">옵션 타입 추가</button>
 
     <hr>
-
-    <!-- 옵션 조합 테이블 -->
     <h4>옵션 조합</h4>
     <table id="optionCombinationTable" border="1" style="width:100%; border-collapse: collapse;">
         <thead>
@@ -227,7 +217,6 @@
         </tr>
         </thead>
         <tbody id="optionCombinationBody">
-        <!-- JS에서 자동 생성 -->
         </tbody>
     </table>
 

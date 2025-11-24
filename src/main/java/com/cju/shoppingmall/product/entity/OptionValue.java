@@ -13,7 +13,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 public class OptionValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +22,13 @@ public class OptionValue {
     private OptionType optionType;
     @Column(nullable = false)
     private String value;
+
+    public OptionValue(OptionType optionType, String value) {
+        this.optionType = optionType;
+        this.value = value;
+    }
+
+    public OptionValue() {
+
+    }
 }

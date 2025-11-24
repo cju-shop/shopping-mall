@@ -1,4 +1,4 @@
-package com.cju.shoppingmall.controller;
+package com.cju.shoppingmall.product.controller;
 
 import lombok.Getter;
 import lombok.Setter;

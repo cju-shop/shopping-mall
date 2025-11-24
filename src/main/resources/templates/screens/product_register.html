@@ -1,129 +1,189 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>상품 등록</title>
+
     <script>
-        function createOptionTypeRow(idx, typeName = "", values = []) {
-            const wrap = document.createElement("div");
-            wrap.dataset.index = idx;
-            wrap.innerHTML = `
-        <div>
-          <strong>옵션 타입명:</strong>
-          <input type="text" name="optionTypes[${idx}].name" placeholder="예: 색상 / 사이즈" value="${typeName}">
-          <button type="button" onclick="this.parentElement.parentElement.remove(); renumber();">옵션 타입 삭제</button>
-        </div>
-        <div class="values"></div>
-        <div><button type="button" onclick="addValueRow(this)">값 추가</button></div>
-        <hr>
-      `;
-            const valuesBox = wrap.querySelector(".values");
-            values.forEach((v, i) => valuesBox.appendChild(makeValueRow(idx, i, v)));
-            if (values.length === 0) valuesBox.appendChild(makeValueRow(idx, 0, ""));
-            return wrap;
-        }
-
-        function makeValueRow(optIdx, valIdx, value = "") {
-            const row = document.createElement("div");
-            row.className = "value-row";
-            row.innerHTML = `
-        값: <input type="text" name="optionTypes[${optIdx}].values[${valIdx}].value" placeholder="예: 브라운 / S" value="${value}">
-        <button type="button" onclick="this.parentElement.remove(); renumber();">삭제</button>
-      `;
-            return row;
-        }
-
-        function addValueRow(btn) {
-            const optWrap = btn.closest("div").parentElement;
-            const optIdx = parseInt(optWrap.dataset.index, 10);
-            const valuesBox = optWrap.querySelector(".values");
-            const nextValIdx = valuesBox.querySelectorAll(".value-row").length;
-            valuesBox.appendChild(makeValueRow(optIdx, nextValIdx, ""));
-        }
-
-        function renumber() {
-            const types = document.querySelectorAll("#optionTypes .opt-wrap");
-            types.forEach((wrap, i) => {
-                wrap.dataset.index = i;
-                const typeInput = wrap.querySelector(`input[name^="optionTypes["]`);
-                typeInput.name = `optionTypes[${i}].name`;
-                const rows = wrap.querySelectorAll(".value-row");
-                rows.forEach((row, j) => {
-                    const input = row.querySelector('input[name^="optionTypes["]');
-                    input.name = `optionTypes[${i}].values[${j}].value`;
-                });
-            });
-        }
-
-        function addOptionType() {
-            const box = document.getElementById("optionTypes");
-            const idx = box.querySelectorAll(".opt-wrap").length;
-            const wrap = createOptionTypeRow(idx, "", []);
-            wrap.classList.add("opt-wrap");
-            box.appendChild(wrap);
-            renumber();
-        }
-
-        const childMap = {
-            outerwear: ["jacket","coat","jumper","mouton_fur","cardigan","field_jacket"],
-            tops: ["tshirt","shirt","blouse","knit_sweater","hoodie","sweatshirt","sleeveless"],
-            pants: ["jeans","slacks","cotton_pants","shorts","training_jogger"],
-            dress: ["dress_mini","dress_midi","dress_long","two_piece","jumpsuit"],
-            skirt: ["skirt_mini","skirt_midi","skirt_long"],
-            shoes: ["flat_loafer","sandal_slipper","heel","sneakers","boots_worker"],
-            bag: ["crossbag","totebag","shoulderbag","ecobag","clutch","backpack","wallet","pouch"]
-        };
-
-        function populateChildOptions(parentValue) {
+        // ============================
+        // 1. 카테고리 하위 조회 (DB)
+        // ============================
+        async function loadChildCategories(parentId) {
             const childSelect = document.getElementById("childCategory");
             childSelect.innerHTML = `<option value="">(선택 안 함)</option>`;
-            const list = childMap[parentValue];
-            if (!list) return;
-            list.forEach(v => {
-                const opt = document.createElement("option");
-                opt.value = v;
-                opt.textContent = v;
-                childSelect.appendChild(opt);
+
+            if (!parentId) return;
+
+            try {
+                const res = await fetch(`/categories/${parentId}/children`);
+                if (!res.ok) {
+                    console.error("하위 카테고리 조회 실패:", res.status);
+                    return;
+                }
+                const list = await res.json(); // [{id, name}, ...]
+
+                list.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    childSelect.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("하위 카테고리 조회 중 오류:", e);
+            }
+        }
+
+        // ============================
+        // 2. 옵션 타입 / 값 관리
+        // ============================
+        // 예: [{ name:"사이즈", values:["Free","L"] }, { name:"색상", values:["Green","Beige"] }]
+        let optionTypes = [];
+
+        function addOptionType() {
+            optionTypes.push({ name: "", values: [] });
+            renderOptionTypes();
+            renderCombination();
+        }
+
+        function removeOptionType(index) {
+            optionTypes.splice(index, 1);
+            renderOptionTypes();
+            renderCombination();
+        }
+
+        function addOptionValue(index, value) {
+            if (!value.trim()) return;
+            optionTypes[index].values.push(value.trim());
+            renderOptionTypes();
+            renderCombination();
+        }
+
+        function removeOptionValue(typeIndex, valueIndex) {
+            optionTypes[typeIndex].values.splice(valueIndex, 1);
+            renderOptionTypes();
+            renderCombination();
+        }
+
+        function renderOptionTypes() {
+            const area = document.getElementById("optionTypeArea");
+            area.innerHTML = "";
+
+            optionTypes.forEach((opt, i) => {
+                const box = document.createElement("div");
+                box.style.margin = "12px 0";
+                box.innerHTML = `
+                    <div>
+                        <strong>옵션명:</strong>
+                        <input type="text"
+                               value="${opt.name}"
+                               placeholder="예: 사이즈"
+                               oninput="optionTypes[${i}].name=this.value; renderCombination();">
+                        <button type="button" onclick="removeOptionType(${i})">옵션 삭제</button>
+                    </div>
+
+                    <div style="margin-top:6px;">
+                        <strong>옵션 항목:</strong>
+                        <input type="text"
+                               placeholder="옵션 항목 입력 후 ENTER"
+                               onkeydown="if(event.key==='Enter'){addOptionValue(${i}, this.value); this.value='';}">
+                    </div>
+
+                    <div style="margin-top:6px;">
+                        ${opt.values.map((v, vi) =>
+                    `<span style="display:inline-block;background:#eee;padding:4px 8px;margin:2px;border-radius:4px;">
+                                ${v}
+                                <button type="button" onclick="removeOptionValue(${i},${vi})">x</button>
+                             </span>`
+                ).join("")}
+                    </div>
+                `;
+                area.appendChild(box);
             });
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            // 초기 옵션 예시
-            const box = document.getElementById("optionTypes");
-            const color = createOptionTypeRow(0, "색상", ["브라운", "블랙"]);
-            color.classList.add("opt-wrap");
-            box.appendChild(color);
-            const size = createOptionTypeRow(1, "사이즈", ["S", "M", "L"]);
-            size.classList.add("opt-wrap");
-            box.appendChild(size);
+        // ============================
+        // 3. 옵션 조합(Free × Green 등) 테이블
+        // ============================
+        function renderCombination() {
+            const body = document.getElementById("optionCombinationBody");
+            body.innerHTML = "";
 
-            document.getElementById("category").addEventListener("change", (e) => {
-                populateChildOptions(e.target.value);
+            if (optionTypes.length === 0) return;
+            if (optionTypes.some(opt => opt.values.length === 0)) return;
+
+            // 모든 조합 계산
+            let combinations = optionTypes[0].values.map(v => [v]);
+
+            for (let i = 1; i < optionTypes.length; i++) {
+                const newComb = [];
+                combinations.forEach(base => {
+                    optionTypes[i].values.forEach(value => {
+                        newComb.push([...base, value]);
+                    });
+                });
+                combinations = newComb;
+            }
+
+            combinations.forEach((comb, idx) => {
+                const tr = document.createElement("tr");
+                const label = comb.join(" × ");
+
+                tr.innerHTML = `
+                    <td>
+                        ${label}
+                        <input type="hidden" name="options[${idx}].name" value="${label}">
+                    </td>
+                    <td><input type="number" name="options[${idx}].extraPrice" value="0"></td>
+                    <td><input type="number" name="options[${idx}].stock" value="0"></td>
+                    <td>
+                        <input type="checkbox" name="options[${idx}].active" checked>
+                    </td>
+                    <td>
+                        <button type="button" onclick="this.closest('tr').remove();">삭제</button>
+                    </td>
+                `;
+                body.appendChild(tr);
             });
+        }
+
+        // ============================
+        // 4. 초기화
+        // ============================
+        document.addEventListener("DOMContentLoaded", () => {
+            // 카테고리 변경 시 하위 카테고리 로드
+            document.getElementById("category").addEventListener("change", (e) => {
+                const parentId = e.target.value;
+                loadChildCategories(parentId);
+            });
+
+            // 기본 옵션 타입 2개 예시 (사이즈, 색상)
+            optionTypes = [
+                { name: "사이즈", values: ["Free", "L"] },
+                { name: "색상", values: ["Green", "Beige"] }
+            ];
+            renderOptionTypes();
+            renderCombination();
         });
     </script>
 </head>
 <body>
 <h1>상품 등록</h1>
 
-<form action="/register" method="post" enctype="multipart/form-data">
+<form th:action="@{/register}" method="post" enctype="multipart/form-data">
     <div>
         <label for="category">상위 카테고리:</label>
-        <select id="category" name="category" required>
+        <select id="category" name="parentCategoryId" required>
             <option value="">선택하세요</option>
-            <option value="outerwear">아우터</option>
-            <option value="tops">상의</option>
-            <option value="pants">바지</option>
-            <option value="dress">원피스</option>
-            <option value="skirt">스커트</option>
-            <option value="shoes">신발</option>
-            <option value="bag">가방</option>
+            <option th:each="cat : ${parentCategories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}">
+            </option>
         </select>
     </div>
 
     <div>
         <label for="childCategory">하위 카테고리:</label>
-        <select id="childCategory" name="childrenCategory">
+        <select id="childCategory" name="childCategoryId">
             <option value="">(선택 안 함)</option>
         </select>
     </div>
@@ -143,9 +203,33 @@
         <input type="file" id="image" name="image" accept="image/*" required>
     </div>
 
+    <!-- ===================== -->
+    <!--  옵션 영역 (최종)     -->
+    <!-- ===================== -->
     <h3>옵션</h3>
-    <div id="optionTypes"></div>
+
+    <!-- 옵션 타입 & 항목 입력 -->
+    <div id="optionTypeArea"></div>
     <button type="button" onclick="addOptionType()">옵션 타입 추가</button>
+
+    <hr>
+
+    <!-- 옵션 조합 테이블 -->
+    <h4>옵션 조합</h4>
+    <table id="optionCombinationTable" border="1" style="width:100%; border-collapse: collapse;">
+        <thead>
+        <tr>
+            <th>옵션명</th>
+            <th>추가 금액</th>
+            <th>재고 수량</th>
+            <th>사용 여부</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody id="optionCombinationBody">
+        <!-- JS에서 자동 생성 -->
+        </tbody>
+    </table>
 
     <div style="margin-top: 16px;">
         <button type="submit">등록하기</button>

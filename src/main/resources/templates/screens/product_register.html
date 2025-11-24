@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <script>
+        function createOptionTypeRow(idx, typeName = "", values = []) {
+            const wrap = document.createElement("div");
+            wrap.dataset.index = idx;
+            wrap.innerHTML = `
+        <div>
+          <strong>옵션 타입명:</strong>
+          <input type="text" name="optionTypes[${idx}].name" placeholder="예: 색상 / 사이즈" value="${typeName}">
+          <button type="button" onclick="this.parentElement.parentElement.remove(); renumber();">옵션 타입 삭제</button>
+        </div>
+        <div class="values"></div>
+        <div><button type="button" onclick="addValueRow(this)">값 추가</button></div>
+        <hr>
+      `;
+            const valuesBox = wrap.querySelector(".values");
+            values.forEach((v, i) => valuesBox.appendChild(makeValueRow(idx, i, v)));
+            if (values.length === 0) valuesBox.appendChild(makeValueRow(idx, 0, ""));
+            return wrap;
+        }
+
+        function makeValueRow(optIdx, valIdx, value = "") {
+            const row = document.createElement("div");
+            row.className = "value-row";
+            row.innerHTML = `
+        값: <input type="text" name="optionTypes[${optIdx}].values[${valIdx}].value" placeholder="예: 브라운 / S" value="${value}">
+        <button type="button" onclick="this.parentElement.remove(); renumber();">삭제</button>
+      `;
+            return row;
+        }
+
+        function addValueRow(btn) {
+            const optWrap = btn.closest("div").parentElement;
+            const optIdx = parseInt(optWrap.dataset.index, 10);
+            const valuesBox = optWrap.querySelector(".values");
+            const nextValIdx = valuesBox.querySelectorAll(".value-row").length;
+            valuesBox.appendChild(makeValueRow(optIdx, nextValIdx, ""));
+        }
+
+        function renumber() {
+            const types = document.querySelectorAll("#optionTypes .opt-wrap");
+            types.forEach((wrap, i) => {
+                wrap.dataset.index = i;
+                const typeInput = wrap.querySelector(`input[name^="optionTypes["]`);
+                typeInput.name = `optionTypes[${i}].name`;
+                const rows = wrap.querySelectorAll(".value-row");
+                rows.forEach((row, j) => {
+                    const input = row.querySelector('input[name^="optionTypes["]');
+                    input.name = `optionTypes[${i}].values[${j}].value`;
+                });
+            });
+        }
+
+        function addOptionType() {
+            const box = document.getElementById("optionTypes");
+            const idx = box.querySelectorAll(".opt-wrap").length;
+            const wrap = createOptionTypeRow(idx, "", []);
+            wrap.classList.add("opt-wrap");
+            box.appendChild(wrap);
+            renumber();
+        }
+
+        const childMap = {
+            outerwear: ["jacket","coat","jumper","mouton_fur","cardigan","field_jacket"],
+            tops: ["tshirt","shirt","blouse","knit_sweater","hoodie","sweatshirt","sleeveless"],
+            pants: ["jeans","slacks","cotton_pants","shorts","training_jogger"],
+            dress: ["dress_mini","dress_midi","dress_long","two_piece","jumpsuit"],
+            skirt: ["skirt_mini","skirt_midi","skirt_long"],
+            shoes: ["flat_loafer","sandal_slipper","heel","sneakers","boots_worker"],
+            bag: ["crossbag","totebag","shoulderbag","ecobag","clutch","backpack","wallet","pouch"]
+        };
+
+        function populateChildOptions(parentValue) {
+            const childSelect = document.getElementById("childCategory");
+            childSelect.innerHTML = `<option value="">(선택 안 함)</option>`;
+            const list = childMap[parentValue];
+            if (!list) return;
+            list.forEach(v => {
+                const opt = document.createElement("option");
+                opt.value = v;
+                opt.textContent = v;
+                childSelect.appendChild(opt);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 초기 옵션 예시
+            const box = document.getElementById("optionTypes");
+            const color = createOptionTypeRow(0, "색상", ["브라운", "블랙"]);
+            color.classList.add("opt-wrap");
+            box.appendChild(color);
+            const size = createOptionTypeRow(1, "사이즈", ["S", "M", "L"]);
+            size.classList.add("opt-wrap");
+            box.appendChild(size);
+
+            document.getElementById("category").addEventListener("change", (e) => {
+                populateChildOptions(e.target.value);
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>상품 등록</h1>
+
+<form action="/register" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="category">상위 카테고리:</label>
+        <select id="category" name="category" required>
+            <option value="">선택하세요</option>
+            <option value="outerwear">아우터</option>
+            <option value="tops">상의</option>
+            <option value="pants">바지</option>
+            <option value="dress">원피스</option>
+            <option value="skirt">스커트</option>
+            <option value="shoes">신발</option>
+            <option value="bag">가방</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="childCategory">하위 카테고리:</label>
+        <select id="childCategory" name="childrenCategory">
+            <option value="">(선택 안 함)</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="name">상품명:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div>
+        <label for="price">가격:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+
+    <div>
+        <label for="image">상품 이미지:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+    </div>
+
+    <h3>옵션</h3>
+    <div id="optionTypes"></div>
+    <button type="button" onclick="addOptionType()">옵션 타입 추가</button>
+
+    <div style="margin-top: 16px;">
+        <button type="submit">등록하기</button>
+    </div>
+</form>
+</body>
+</html>

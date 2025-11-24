@@ -1,35 +1,56 @@
 package com.cju.shoppingmall.product.controller;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter
 public class ProductRegisterForm {
 
-    private Long parentCategoryId;
-    private Long childCategoryId;
+    private final Long parentCategoryId;
+    private final Long childCategoryId;
 
-    private String name;
-    private Long price;
-    private MultipartFile image;
+    private final String name;
+    private final Long price;
+    private final MultipartFile image;
 
-    private List<OptionTypeForm> optionTypes = new ArrayList<>();
+    private final List<OptionTypeForm> optionTypes;
+
+    public ProductRegisterForm(
+            Long parentCategoryId,
+            Long childCategoryId,
+            String name,
+            Long price,
+            MultipartFile image,
+            List<OptionTypeForm> optionTypes) {
+        this.parentCategoryId = parentCategoryId;
+        this.childCategoryId = childCategoryId;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.optionTypes = (optionTypes != null) ? optionTypes : new ArrayList<>();
+    }
 
     @Getter
-    @Setter
     public static class OptionTypeForm {
-        private String name;
-        private List<OptionValueForm> values = new ArrayList<>();
-    }
 
+        private final String name;
+        private final List<OptionValueForm> values;
+
+        public OptionTypeForm(String name, List<OptionValueForm> values) {
+            this.name = name;
+            this.values = (values != null) ? values : new ArrayList<>();
+        }
+    }
     @Getter
-    @Setter
     public static class OptionValueForm {
-        private String value;
-    }
 
+        private final String value;
+
+        public OptionValueForm(String value) {
+            this.value = value;
+        }
+    }
 }

@@ -19,16 +19,18 @@
                 }
                 const list = await res.json(); // [{id, name}, ...]
 
-                list.forEach(c => {
+                // ✅ forEach → for...of
+                for (const c of list) {
                     const opt = document.createElement("option");
                     opt.value = c.id;
                     opt.textContent = c.name;
                     childSelect.appendChild(opt);
-                });
+                }
             } catch (e) {
                 console.error("하위 카테고리 조회 중 오류:", e);
             }
         }
+
 
         let optionTypes = [];
 
@@ -60,57 +62,62 @@
             const area = document.getElementById("optionTypeArea");
             area.innerHTML = "";
 
-            optionTypes.forEach((opt, i) => {
+            // ✅ forEach → for...of + entries()
+            for (const [i, opt] of optionTypes.entries()) {
                 const box = document.createElement("div");
                 box.style.margin = "12px 0";
 
                 box.innerHTML = `
-                    <div>
-                        <strong>옵션명:</strong>
-                        <input type="text"
-                               value="${opt.name}"
-                               placeholder="예: 사이즈"
-                               oninput="optionTypes[${i}].name=this.value; renderOptionTypes(); renderCombination();">
-                        <button type="button" onclick="removeOptionType(${i})">옵션 삭제</button>
-                    </div>
+            <div>
+                <strong>옵션명:</strong>
+                <input type="text"
+                       value="${opt.name}"
+                       placeholder="예: 사이즈"
+                       oninput="optionTypes[${i}].name=this.value; renderOptionTypes(); renderCombination();">
+                <button type="button" onclick="removeOptionType(${i})">옵션 삭제</button>
+            </div>
 
-                    <div style="margin-top:6px;">
-                        <strong>옵션 항목:</strong>
-                        <input type="text"
-                               placeholder="옵션 항목 입력 후 ENTER"
-                               onkeydown="if(event.key==='Enter'){addOptionValue(${i}, this.value); this.value='';}">
-                    </div>
+            <div style="margin-top:6px;">
+                <strong>옵션 항목:</strong>
+                <input type="text"
+                       placeholder="옵션 항목 입력 후 ENTER"
+                       onkeydown="if(event.key==='Enter'){addOptionValue(${i}, this.value); this.value='';}">
+            </div>
 
-                    <div style="margin-top:6px;">
-                        ${
-                    opt.values.map((v, vi) =>
-                        `<span style="display:inline-block;background:#eee;padding:4px 8px;margin:2px;border-radius:4px;">
-                                    ${v}
-                                    <button type="button" onclick="removeOptionValue(${i},${vi})">x</button>
-                                 </span>`
-                    ).join("")
+            <div style="margin-top:6px;">
+                ${
+                    opt.values
+                        .map((v, vi) =>
+                            `<span style="display:inline-block;background:#eee;padding:4px 8px;margin:2px;border-radius:4px;">
+                                ${v}
+                                <button type="button" onclick="removeOptionValue(${i},${vi})">x</button>
+                             </span>`
+                        ).join("")
                 }
-                    </div>
-                `;
+            </div>
+        `;
 
                 const hidden = document.createElement("div");
                 hidden.style.display = "none";
 
                 let hiddenHtml = `<input type="hidden" name="optionTypes[${i}].name" value="${opt.name}">`;
-                opt.values.forEach((v, vi) => {
+
+                // ✅ forEach → for...of + entries()
+                for (const [vi, v] of opt.values.entries()) {
                     hiddenHtml += `
-                        <input type="hidden"
-                               name="optionTypes[${i}].values[${vi}].value"
-                               value="${v}">
-                    `;
-                });
+                <input type="hidden"
+                       name="optionTypes[${i}].values[${vi}].value"
+                       value="${v}">
+            `;
+                }
 
                 hidden.innerHTML = hiddenHtml;
                 box.appendChild(hidden);
 
                 area.appendChild(box);
-            });
+            }
         }
+
 
         function renderCombination() {
             const body = document.getElementById("optionCombinationBody");
@@ -119,32 +126,41 @@
             if (optionTypes.length === 0) return;
             if (optionTypes.some(opt => opt.values.length === 0)) return;
 
+            // 첫 번째 옵션 타입의 값들로 시작
             let combinations = optionTypes[0].values.map(v => [v]);
 
+            // 이후 옵션 타입들과 카테시안 곱
             for (let i = 1; i < optionTypes.length; i++) {
                 const newComb = [];
-                combinations.forEach(base => {
-                    optionTypes[i].values.forEach(value => {
+
+                // ✅ forEach → for...of
+                for (const base of combinations) {
+                    for (const value of optionTypes[i].values) {
                         newComb.push([...base, value]);
-                    });
-                });
+                    }
+                }
                 combinations = newComb;
             }
 
-            combinations.forEach((comb, idx) => {
+            let idx = 0;
+            // ✅ forEach → for...of + idx 수동 증가 (Sonar에서 unused 매개변수 경고도 같이 사라짐)
+            for (const comb of combinations) {
                 const tr = document.createElement("tr");
                 const label = comb.join(" × ");
 
                 tr.innerHTML = `
-                    <td>${label}</td>
-                    <td><input type="number" value="0"></td>
-                    <td><input type="number" value="0"></td>
-                    <td><input type="checkbox" checked></td>
-                    <td><button type="button" onclick="this.closest('tr').remove();">삭제</button></td>
-                `;
+            <td>${label}</td>
+            <td><input type="number" value="0"></td>
+            <td><input type="number" value="0"></td>
+            <td><input type="checkbox" checked></td>
+            <td><button type="button" onclick="this.closest('tr').remove();">삭제</button></td>
+        `;
+
                 body.appendChild(tr);
-            });
+                idx++;
+            }
         }
+
 
 
         document.addEventListener("DOMContentLoaded", () => {

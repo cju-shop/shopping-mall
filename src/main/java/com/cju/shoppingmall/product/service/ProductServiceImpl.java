@@ -1,6 +1,7 @@
 package com.cju.shoppingmall.product.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cju.shoppingmall.member.repository.MemberRepository;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionTypeForm;
@@ -36,8 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
-        Product save = repository.save(product);
-        return save;
+        return repository.save(product);
     }
 
     @Override
@@ -52,18 +52,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Long register(ProductRegisterForm form) {
-        Member createdBy = memberRepository.findByUsername("admin")
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저 없음"));
+        Member createdBy = findAdminMember();
+        Category category = findCategory(form.getChildCategoryId());
 
-        Long childId = form.getChildCategoryId();
+        Product savedProduct = saveProduct(form, category, createdBy);
+
+        processOptionTypes(form.getOptionTypes(), savedProduct);
+
+        return savedProduct.getId();
+    }
+
+    private Member findAdminMember() {
+        return memberRepository.findByUsername("admin")
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저 없음"));
+    }
+
+    private Category findCategory(Long childId) {
         if (childId == null) {
             throw new IllegalArgumentException("하위 카테고리가 선택되지 않았습니다.");
         }
 
-        Category category = categoryRepository.findById(childId)
+        return categoryRepository.findById(childId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("해당 하위 카테고리를 찾을 수 없습니다. id=" + childId));
+    }
 
+    private Product saveProduct(ProductRegisterForm form, Category category, Member createdBy) {
         Product product = new Product(
                 form.getName(),
                 "test.jpg",
@@ -72,46 +86,53 @@ public class ProductServiceImpl implements ProductService {
                 category,
                 createdBy
         );
+        return repository.save(product);
+    }
 
-        Product savedProduct = repository.save(product);
-
-        if (form.getOptionTypes() != null) {
-
-            for (OptionTypeForm typeForm : form.getOptionTypes()) {
-                String typeName = typeForm.getName();
-
-                OptionType optionType = optionTypeRepository
-                        .findByName(typeName)
-                        .orElseGet(() -> {
-                            OptionType type = new OptionType(typeName,typeName);
-                            return optionTypeRepository.save(type);
-                        });
-
-
-                boolean productHasOptionType  = productOptionRepository
-                        .existsByProductIdAndOptionTypeId(savedProduct.getId(), optionType.getId());
-
-                if (!productHasOptionType ) {
-                    ProductOption productOption = new ProductOption(savedProduct,optionType);
-                    productOptionRepository.save(productOption);
-                }
-
-                if (typeForm.getValues() != null) {
-                    for (OptionValueForm valueForm : typeForm.getValues()) {
-                        String valueName = valueForm.getValue();
-
-                        optionValueRepository
-                                .findByOptionTypeIdAndValue(optionType.getId(), valueName)
-                                .orElseGet(() -> {
-                                    OptionValue value = new OptionValue(optionType,valueName);
-                                    return optionValueRepository.save(value);
-                                });
-                    }
-                }
-            }
+    private void processOptionTypes(List<OptionTypeForm> optionTypes, Product product) {
+        if (optionTypes == null) {
+            return;
         }
 
-        return savedProduct.getId();
+        for (OptionTypeForm typeForm : optionTypes) {
+            OptionType optionType = getOrCreateOptionType(typeForm.getName());
+            linkProductAndOptionType(product, optionType);
+            saveOptionValues(typeForm.getValues(), optionType);
+        }
     }
+
+    private OptionType getOrCreateOptionType(String typeName) {
+        Optional<OptionType> existingOptionType = optionTypeRepository.findByName(typeName);
+
+        return existingOptionType.orElseGet(() -> optionTypeRepository.save(new OptionType(typeName, typeName)));
+    }
+
+    private void linkProductAndOptionType(Product product, OptionType optionType) {
+        boolean productHasOptionType = productOptionRepository
+                .existsByProductIdAndOptionTypeId(product.getId(), optionType.getId());
+
+        if (!productHasOptionType) {
+            productOptionRepository.save(new ProductOption(product, optionType));
+        }
+    }
+
+    private void saveOptionValues(List<OptionValueForm> values, OptionType optionType) {
+        if (values == null) {
+            return;
+        }
+
+        for (OptionValueForm valueForm : values) {
+            String valueName = valueForm.getValue();
+
+            boolean existsOptionValue = optionValueRepository
+                    .findByOptionTypeIdAndValue(optionType.getId(), valueName)
+                    .isPresent();
+
+            if (!existsOptionValue) {
+                optionValueRepository.save(new OptionValue(optionType, valueName));
+            }
+        }
+    }
+
 
 }

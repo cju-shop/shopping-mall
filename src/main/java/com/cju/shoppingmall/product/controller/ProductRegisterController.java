@@ -1,10 +1,5 @@
 package com.cju.shoppingmall.product.controller;
 
-
-import com.cju.shoppingmall.member.entity.Member;
-import com.cju.shoppingmall.member.entity.MemberRole;
-import com.cju.shoppingmall.member.repository.MemberRepository;
-import com.cju.shoppingmall.member.service.MemberService;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.CategoryDto;
 import com.cju.shoppingmall.product.repository.CategoryRepository;
@@ -45,7 +40,7 @@ public class ProductRegisterController {
 
     @PostMapping("/register")
     public String registerProduct(@ModelAttribute ProductRegisterForm form) {
-        Long productId = productService.register(form); // 작성자 고정값
+        productService.register(form); // 작성자 고정값
 
         return "redirect:/product/register";
     }

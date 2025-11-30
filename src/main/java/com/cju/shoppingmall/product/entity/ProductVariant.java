@@ -2,21 +2,16 @@ package com.cju.shoppingmall.product.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.cju.shoppingmall.member.entity.Member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Getter
 public class ProductVariant {
@@ -45,4 +40,25 @@ public class ProductVariant {
     @JoinColumn(name = "updated_by")
     private Member updatedBy;
 
+    public ProductVariant(
+            Product product,
+            Long price,
+            Double discountRate,
+            Long stockQty,
+            Boolean isActive,
+            String fingerprint,
+            Member createdBy
+    ) {
+        this.product = product;
+        this.price = price;
+        this.discountRate = discountRate;
+        this.stockQty = stockQty;
+        this.isActive = isActive;
+        this.fingerprint = fingerprint;
+        this.createdBy = createdBy;
+    }
+
+    public ProductVariant() {
+
+    }
 }

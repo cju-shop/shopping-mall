@@ -6,6 +6,7 @@ import com.cju.shoppingmall.product.repository.CategoryRepository;
 import com.cju.shoppingmall.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public class ProductRegisterController {
     public ProductRegisterController(ProductService productService, CategoryRepository categoryRepository) {
         this.productService = productService;
         this.categoryRepository = categoryRepository;
+    }
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        // 🔥 폼 필드에 직접 값 주입 (setter 없이도 동작하게 만듦)
+        binder.initDirectFieldAccess();
     }
 
     @GetMapping("/product/register")

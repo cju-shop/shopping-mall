@@ -132,8 +132,6 @@
             // 이후 옵션 타입들과 카테시안 곱
             for (let i = 1; i < optionTypes.length; i++) {
                 const newComb = [];
-
-                // ✅ forEach → for...of
                 for (const base of combinations) {
                     for (const value of optionTypes[i].values) {
                         newComb.push([...base, value]);
@@ -143,23 +141,58 @@
             }
 
             let idx = 0;
-            // ✅ forEach → for...of + idx 수동 증가 (Sonar에서 unused 매개변수 경고도 같이 사라짐)
             for (const comb of combinations) {
                 const tr = document.createElement("tr");
                 const label = comb.join(" × ");
 
                 tr.innerHTML = `
-            <td>${label}</td>
-            <td><input type="number" value="0"></td>
-            <td><input type="number" value="0"></td>
-            <td><input type="checkbox" checked></td>
-            <td><button type="button" onclick="this.closest('tr').remove();">삭제</button></td>
-        `;
+                <td>
+                    ${label}
+                    <!-- 서버 매핑용 라벨 -->
+                    <input type="hidden"
+                           name="variants[${idx}].label"
+                           value="${label}">
+                </td>
+
+                <!-- 추가 금액 -->
+                <td>
+                    <input type="number"
+                           name="variants[${idx}].extraPrice"
+                           value="0">
+                </td>
+
+                <!-- 재고 수량 -->
+                <td>
+                    <input type="number"
+                           name="variants[${idx}].stockQty"
+                           value="0">
+                </td>
+
+                <!-- 사용 여부 -->
+                <td>
+                    <!-- 체크 안 되어도 false 값이 가도록 hidden 한 번 -->
+                    <input type="hidden"
+                           name="variants[${idx}].active"
+                           value="false">
+                    <input type="checkbox"
+                           name="variants[${idx}].active"
+                           value="true"
+                           checked>
+                </td>
+
+                <td>
+                    <button type="button"
+                            onclick="this.closest('tr').remove();">
+                        삭제
+                    </button>
+                </td>
+            `;
 
                 body.appendChild(tr);
                 idx++;
             }
         }
+
 
 
 

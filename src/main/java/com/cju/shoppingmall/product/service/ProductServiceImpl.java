@@ -20,19 +20,25 @@ public class ProductServiceImpl implements ProductService {
     private final OptionValueRepository optionValueRepository;
     private final ProductOptionRepository productOptionRepository;
     private final MemberRepository memberRepository;
+    private final ProductVariantRepository productVariantRepository;
+    private final ProductVariantOptionRepository productVariantOptionRepository;
 
     public ProductServiceImpl(ProductRepository repository,
                               CategoryRepository categoryRepository,
                               OptionTypeRepository optionTypeRepository,
                               OptionValueRepository optionValueRepository,
                               ProductOptionRepository productOptionRepository,
-                              MemberRepository memberRepository) {
+                              MemberRepository memberRepository,
+                              ProductVariantRepository productVariantRepository,
+                              ProductVariantOptionRepository productVariantOptionRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.optionTypeRepository = optionTypeRepository;
         this.optionValueRepository = optionValueRepository;
         this.productOptionRepository = productOptionRepository;
         this.memberRepository = memberRepository;
+        this.productVariantRepository = productVariantRepository;
+        this.productVariantOptionRepository = productVariantOptionRepository;
     }
 
     @Override

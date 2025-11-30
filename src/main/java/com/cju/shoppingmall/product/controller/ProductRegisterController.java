@@ -40,7 +40,7 @@ public class ProductRegisterController {
 
     @PostMapping("/register")
     public String registerProduct(@ModelAttribute ProductRegisterForm form) {
-        productService.register(form); // 작성자 고정값
+        productService.register(form);
 
         return "redirect:/product/register";
     }

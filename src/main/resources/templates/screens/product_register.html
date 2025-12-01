@@ -70,9 +70,13 @@
         <div>
             <strong>옵션명:</strong>
             <input type="text"
-                   value="${opt.name}"
-                   placeholder="예: 사이즈"
-                   oninput="optionTypes[${i}].name=this.value; renderOptionTypes(); renderCombination();">
+               value="${opt.name}"
+               placeholder="예: 사이즈"
+               oninput="
+                   optionTypes[${i}].name = this.value;
+                   const hiddenNameInput = document.getElementById('optionType-name-${i}');
+                   if (hiddenNameInput) hiddenNameInput.value = this.value;
+            ">
             <button type="button" onclick="removeOptionType(${i})">옵션 삭제</button>
         </div>
 
@@ -101,8 +105,11 @@
                 hidden.style.display = "none";
 
                 let hiddenHtml = `
-            <input type="hidden" name="optionTypes[${i}].name" value="${opt.name}">
-        `;
+                    <input type="hidden"
+                           id="optionType-name-${i}"
+                           name="optionTypes[${i}].name"
+                           value="${opt.name}">
+                `;
 
                 for (const [vi, v] of opt.values.entries()) {
                     hiddenHtml += `

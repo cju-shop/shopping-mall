@@ -68,12 +68,6 @@ public class ProductServiceImpl implements ProductService {
         List<List<OptionValue>> optionValueMatrix =
                 processOptionTypesAndReturnOptionValues(form.getOptionTypes(), savedProduct);
 
-        System.out.println("==== [DEBUG] register ====");
-        System.out.println("childId          = " + form.getChildCategoryId());
-        System.out.println("optionTypes size = " + (form.getOptionTypes() == null ? "null" : form.getOptionTypes().size()));
-        System.out.println("variants size    = " + (form.getVariants() == null ? "null" : form.getVariants().size()));
-        System.out.println("matrix size      = " + optionValueMatrix.size());
-
         createVariantsFromForm(optionValueMatrix, form.getVariants(), savedProduct, createdBy);
 
         return savedProduct.getId();
@@ -108,28 +102,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<List<OptionValue>> processOptionTypesAndReturnOptionValues(
-            List<OptionTypeForm> optionTypes, Product product
+            List<OptionTypeForm> optionTypeForms, Product product
     ) {
-        List<List<OptionValue>> allOptionValues = new ArrayList<>();
+        List<List<OptionValue>> optionValueMatrix = new ArrayList<>();
 
-        if (optionTypes == null) {
-            System.out.println(">>> optionTypes == null");
-            return allOptionValues;
+        if (optionTypeForms == null) {
+            return optionValueMatrix ;
         }
 
-        for (OptionTypeForm typeForm : optionTypes) {
-            System.out.println(">>> OptionType name=" + typeForm.getName()
-                    + ", values size=" + (typeForm.getValues() == null ? "null" : typeForm.getValues().size()));
+        for (OptionTypeForm typeForm : optionTypeForms) {
 
             OptionType optionType = getOrCreateOptionType(typeForm.getName());
-            linkProductAndOptionType(product, optionType);
+            linkProductAndOptionType(product, optionType); // product_option 테이블 저장
 
-            List<OptionValue> valueList = saveOptionValuesAndReturn(typeForm.getValues(), optionType);
-            allOptionValues.add(valueList);
+            List<OptionValue> valueList = saveOptionValues(typeForm.getValues(), optionType);
+            optionValueMatrix.add(valueList);
         }
 
-        System.out.println(">>> allOptionValues size=" + allOptionValues.size());
-        return allOptionValues;
+        return optionValueMatrix ;
     }
 
 
@@ -140,101 +130,87 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void linkProductAndOptionType(Product product, OptionType optionType) {
-        boolean productHasOptionType = productOptionRepository
-                .existsByProductIdAndOptionTypeId(product.getId(), optionType.getId());
-
-        if (!productHasOptionType) {
+        if (!productOptionRepository.existsByProductIdAndOptionTypeId(product.getId(), optionType.getId())) {
             productOptionRepository.save(new ProductOption(product, optionType));
         }
     }
 
-    private List<OptionValue> saveOptionValuesAndReturn(
-            List<OptionValueForm> values, OptionType optionType
+    private List<OptionValue> saveOptionValues(
+            List<OptionValueForm> valueForms, OptionType optionType
     ) {
-        List<OptionValue> result = new ArrayList<>();
+        List<OptionValue> savedOptionValues = new ArrayList<>();
 
-        if (values == null) {
-            return result;
+        if (valueForms == null) {
+            return savedOptionValues;
         }
 
-        for (OptionValueForm valueForm : values) {
+        for (OptionValueForm valueForm : valueForms) {
             String valueName = valueForm.getValue();
 
-            Optional<OptionValue> existing = optionValueRepository
-                    .findByOptionTypeIdAndValue(optionType.getId(), valueName);
+            OptionValue optionValue = optionValueRepository
+                    .findByOptionTypeIdAndValue(optionType.getId(), valueName)
+                    .orElseGet(() -> optionValueRepository.save(
+                            new OptionValue(optionType, valueName)
+                    ));
 
-            OptionValue saved = existing.orElseGet(
-                    () -> optionValueRepository.save(new OptionValue(optionType, valueName))
-            );
-
-            result.add(saved);
+            savedOptionValues.add(optionValue);
         }
 
-        return result;
+        return savedOptionValues ;
     }
 
-    private void buildCombinations(List<List<OptionValue>> matrix,
-                                   int depth,
-                                   List<OptionValue> current,
-                                   List<List<OptionValue>> result) {
-        if (depth == matrix.size()) {
-            result.add(new ArrayList<>(current));
+    private void buildCombinations(
+            List<List<OptionValue>> optionValueMatrix,
+            int depth,
+            List<OptionValue> currentCombination,
+            List<List<OptionValue>> variantCombinations
+    ) {
+        if (depth == optionValueMatrix.size()) {
+            variantCombinations.add(new ArrayList<>(currentCombination));
             return;
         }
 
-        for (OptionValue v : matrix.get(depth)) {
-            current.add(v);
-            buildCombinations(matrix, depth + 1, current, result);
-            current.remove(current.size() - 1);
+        for (OptionValue optionValue : optionValueMatrix.get(depth)) {
+            currentCombination.add(optionValue);
+            buildCombinations(optionValueMatrix, depth + 1, currentCombination, variantCombinations);
+            currentCombination.remove(currentCombination.size() - 1);
         }
     }
 
     private void createVariantsFromForm(
             List<List<OptionValue>> optionValueMatrix,
-            List<ProductRegisterForm.VariantForm> variants,
+            List<ProductRegisterForm.VariantForm> variantForms,
             Product product,
             Member createdBy
     ) {
-        System.out.println("==== [DEBUG] createVariantsFromForm ====");
-        System.out.println("matrix empty?   = " + optionValueMatrix.isEmpty());
-        System.out.println("variants null?  = " + (variants == null));
-        System.out.println("variants empty? = " + (variants != null && variants.isEmpty()));
-
-        if (optionValueMatrix.isEmpty() || variants == null || variants.isEmpty()) {
-            System.out.println(">>> early return: 조건 만족 안 해서 Variant 생성하지 않음");
+        if (optionValueMatrix.isEmpty() || variantForms == null || variantForms.isEmpty()) {
             return;
         }
 
-        List<List<OptionValue>> combinations = new ArrayList<>();
-        buildCombinations(optionValueMatrix, 0, new ArrayList<>(), combinations);
-        System.out.println("combinations size = " + combinations.size());
+        List<List<OptionValue>> variantCombinations = new ArrayList<>();
+        buildCombinations(optionValueMatrix, 0, new ArrayList<>(), variantCombinations);
 
-        for (int i = 0; i < combinations.size(); i++) {
-            if (i >= variants.size() || variants.get(i) == null) {
-                System.out.println(">>> i=" + i + " : variants가 없어서 스킵");
+        for (int idx = 0; idx < variantCombinations.size(); idx++) {
+
+            if (idx >= variantForms.size() || variantForms.get(idx) == null) {
                 continue;
             }
 
-            ProductRegisterForm.VariantForm vf = variants.get(i);
-            System.out.println(">>> i=" + i + " label=" + vf.getLabel()
-                    + ", extraPrice=" + vf.getExtraPrice()
-                    + ", stock=" + vf.getStockQty()
-                    + ", active=" + vf.getActive());
+            ProductRegisterForm.VariantForm variantForm = variantForms.get(idx);
 
-            if (Boolean.FALSE.equals(vf.getActive())) {
-                System.out.println(">>> i=" + i + " : active=false라 스킵");
-                continue;
-            }
+            List<OptionValue> optionValueCombination = variantCombinations.get(idx);
 
-            List<OptionValue> combo = combinations.get(i);
-            String fingerprint = combo.stream()
+            String fingerprint = optionValueCombination.stream()
                     .map(v -> v.getId().toString())
                     .sorted()
                     .collect(Collectors.joining("-"));
 
             Long basePrice = product.getBasePrice();
-            Long finalPrice = basePrice + (vf.getExtraPrice() != null ? vf.getExtraPrice() : 0L);
-            Long stockQty = vf.getStockQty() != null ? vf.getStockQty() : 0L;
+            Long finalPrice = basePrice +
+                    (variantForm.getExtraPrice() != null ? variantForm.getExtraPrice() : 0L);
+            Long stockQty = variantForm.getStockQty() != null ? variantForm.getStockQty() : 0L;
+
+            boolean isActive = Boolean.TRUE.equals(variantForm.getActive());
 
             ProductVariant savedVariant = productVariantRepository.save(
                     new ProductVariant(
@@ -242,18 +218,18 @@ public class ProductServiceImpl implements ProductService {
                             finalPrice,
                             null,
                             stockQty,
-                            true,
+                            isActive,
                             fingerprint,
                             createdBy
                     )
             );
-            System.out.println(">>> savedVariant id = " + savedVariant.getId());
 
-            for (OptionValue ov : combo) {
-                productVariantOptionRepository.save(new ProductVariantOption(savedVariant, ov));
+            for (OptionValue optionValue : optionValueCombination) {
+                productVariantOptionRepository.save(new ProductVariantOption(savedVariant, optionValue));
             }
         }
     }
+
 
 
 

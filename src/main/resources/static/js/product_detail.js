@@ -100,3 +100,28 @@ function toggleAnswer(index) {
         }
     }
 }
+
+function changeQty(delta) {
+    const qtyInput = document.getElementById("quantity");
+    let qty = parseInt(qtyInput.value);
+
+    qty += delta;
+
+    if (qty < 1) qty = 1; // 최소 1개
+
+    qtyInput.value = qty;
+
+    updateTotalPrice();
+}
+
+function updateTotalPrice() {
+    const qty = parseInt(document.getElementById("quantity").value);
+
+    const priceText = document.querySelector(".price span").textContent;
+    const basePrice = parseInt(priceText.replace(/[^0-9]/g, ''));
+
+    const total = basePrice * qty;
+
+    document.querySelector(".total-price strong").textContent =
+        total.toLocaleString() + "원";
+}

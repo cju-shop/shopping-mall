@@ -680,3 +680,40 @@ body {
     font-size: 16px;
 }
 
+.quantity-box {
+    margin: 20px 0;
+}
+
+.qty-label {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.qty-btn:hover {
+    background-color: #eee;
+}
+
+#quantity {
+    width: 50px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+}

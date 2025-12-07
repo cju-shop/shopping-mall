@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cju.shoppingmall.order.dto.ProductSalesSummaryDto;
 import com.cju.shoppingmall.order.repository.OrderDetailRepository;
 import org.springframework.stereotype.Service;
 
@@ -59,18 +60,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getBestProductsLast7Days(int limit) {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-        List<Object[]> rows = orderDetailRepository.findProductSalesLast7Days(sevenDaysAgo);
-
-        if (rows.isEmpty()) {
+        List<ProductSalesSummaryDto> summaries = orderDetailRepository.findProductSalesLast7Days(sevenDaysAgo);
+        if (summaries.isEmpty()) {
             return repository.findTop8ByOrderByCreatedAtDesc();
         }
 
         List<Long> productIds = new ArrayList<>();
         int count = 0;
-        for (Object[] row : rows) {
+        for (ProductSalesSummaryDto summary : summaries) {
             if (count >= limit) break;
-            Long productId = (Long) row[0];
-            productIds.add(productId);
+            productIds.add(summary.getProductId());
             count++;
         }
 

@@ -1,5 +1,6 @@
 package com.cju.shoppingmall.order.repository;
 
+import com.cju.shoppingmall.order.dto.ProductSalesSummaryDto;
 import com.cju.shoppingmall.order.entity.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +17,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
         GROUP BY od.productVariant.product.id
         ORDER BY SUM(od.quantity) DESC
     """)
-    List<Object[]> findProductSalesLast7Days(LocalDateTime startDate);
+    List<ProductSalesSummaryDto> findProductSalesLast7Days(LocalDateTime startDate);
 }

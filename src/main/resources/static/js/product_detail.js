@@ -125,3 +125,13 @@ function updateTotalPrice() {
     document.querySelector(".total-price strong").textContent =
         total.toLocaleString() + "원";
 }
+
+function addToCart(productId) {
+    const qty = document.getElementById("quantity").value;
+
+    fetch(`/cart/add?productId=${productId}&quantity=${qty}`, {
+        method: 'POST'
+    }).then(() => {
+        alert("장바구니에 추가되었습니다!");
+    });
+}

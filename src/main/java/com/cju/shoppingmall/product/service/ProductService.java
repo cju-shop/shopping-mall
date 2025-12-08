@@ -1,6 +1,7 @@
 package com.cju.shoppingmall.product.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
@@ -15,4 +16,5 @@ public interface ProductService {
     List<Product> getNewProducts();
 
     Long register(ProductRegisterForm form, Member createdBy);
+    Optional<Product> findById(Long id);
 }

@@ -21,4 +21,15 @@ public class Cart {
     private Long discountAmount;
     @Column(nullable = false)
     private Long totalAmount;
+
+    public Cart(Member member, Integer totalCount, Long subtotalAmount, Long discountAmount, Long totalAmount) {
+        this.member = member;
+        this.totalCount = totalCount;
+        this.subtotalAmount = subtotalAmount;
+        this.discountAmount = discountAmount;
+        this.totalAmount = totalAmount;
+    }
+
+    public Cart() {
+    }
 }

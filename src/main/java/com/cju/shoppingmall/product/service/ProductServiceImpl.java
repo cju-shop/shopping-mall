@@ -1,6 +1,7 @@
 package com.cju.shoppingmall.product.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
@@ -109,5 +110,10 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return product.getId();
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return repository.findById(id);
     }
 }

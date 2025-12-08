@@ -32,14 +32,9 @@ public class ProductController {
     }
 
     @GetMapping("/product/detail")
-    public String productDetail(@RequestParam("id") int id, Model model) {
+    public String productDetail(@RequestParam("id") long id, Model model) {
 
-        List<Product> products = productService.getNewProducts();
-
-        // 상품을 DB에서 조회, 없으면 예외 발생
-        Product product = products.stream()
-                .filter(p -> p.getId() != null && p.getId().equals((long) id))
-                .findFirst()
+        Product product = productService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다: id=" + id));
 
         // === 예시 리뷰 데이터 ===

@@ -13,14 +13,16 @@
     <section class="detail-top">
         <div class="gallery">
             <div class="preview">
-                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/800/600'"
-                     alt="상품 이미지" id="previewImg">
+                <img th:src="${product != null ? product.thumbnail : 'https://picsum.photos/seed/101/800/600'}"
+                     alt="상품 이미지" id="previewImg"/>
+
             </div>
 
             <div class="thumbs" id="thumbs">
                 <!-- 썸네일들(샘플 5장). 필요 시 서버에서 주입 가능 -->
-                <img th:src="${product != null} ? ${product.img} : 'https://picsum.photos/seed/101/200/150'"
+                <img th:src="${product != null ? product.thumbnail : 'https://picsum.photos/seed/101/200/150'}"
                      alt="썸네일1" class="thumb is-active">
+
                 <img src="https://picsum.photos/seed/102/200/150" alt="썸네일2" class="thumb">
                 <img src="https://picsum.photos/seed/103/200/150" alt="썸네일3" class="thumb">
                 <img src="https://picsum.photos/seed/104/200/150" alt="썸네일4" class="thumb">
@@ -38,7 +40,7 @@
             <h1 class="title" th:text="${product != null} ? ${product.name} : 'More Square Fabric Bed'">More Square Fabric Bed</h1>
 
             <p class="price">
-                <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">금액</span>
+                <span th:text="${#numbers.formatInteger(product.basePrice, 3, 'COMMA')} + '원'">금액</span>
             </p>
 
             <div class="rating">
@@ -91,10 +93,18 @@
     </section>
 
     <section class="tabs">
-
+        <ul class="tab-menu">
+            <li class="tab-item active" data-tab="info">상품정보</li>
+            <li class="tab-item" data-tab="review">
+                리뷰 (<span th:text="${reviewList != null ? reviewList.size() : 0}">0</span>)
+            </li>
+            <li class="tab-item" data-tab="qna">
+                Q&A (<span th:text="${qnaList != null ? qnaList.size() : 0}">0</span>)
+            </li>
+        </ul>
     </section>
 
-    <section class="hero">
+    <section id="info" class="hero tab-content-section active">
         <div class="product-detail">
             <div class="product-img-box">
                 <img th:src="@{/img/product_detail/test1.png}" alt="제품 전경">
@@ -108,6 +118,89 @@
             <button id="toggle-btn" class="toggle-btn">상품정보 더보기 ˅</button>
         </div>
     </section>
+    <section id="review" class="review-section tab-content-section">
+        <div class="reviews-container">
+            <h2>상품 리뷰</h2>
+
+            <!-- Controller에서 전달한 reviews 리스트를 반복 출력 -->
+            <div th:each="review : ${reviewList}" class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <img src="https://via.placeholder.com/50" alt="프로필" class="profile-img">
+                        <div class="reviewer-details">
+                            <!-- review.user 값 출력 -->
+                            <strong th:text="${review.member}">사용자명</strong>
+                            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- review.content 값 출력 -->
+                <p class="review-text" th:text="${review.content}">리뷰 내용</p>
+                <hr class="review-divider">
+            </div>
+        </div>
+    </section>
+
+    <section id="qna" class="qna-section tab-content-section">
+        <div class="qna-container">
+            <!-- 질문 입력 폼 -->
+            <div class="qna-input-box">
+                <label>
+                    <textarea placeholder="문의 내용을 작성해주세요" class="qna-textarea"></textarea>
+                </label>
+            </div>
+
+            <!-- Q&A 리스트 -->
+            <div th:if="${qnaList != null and !qnaList.isEmpty()}">
+                <div th:each="qna, iterStat : ${qnaList}" class="qna-item">
+
+                    <!-- 질문 영역 -->
+                    <div class="qna-header qna-question"
+                         th:classappend="${qna.hasAnswer} ? 'has-answer' : ''"
+                         th:onclick="'toggleAnswer(' + ${iterStat.index} + ')'">
+                        <span class="qna-badge">질문</span>
+                        <div class="qna-text">
+                            <p th:text="${qna.question}">질문 내용</p>
+                            <p th:if="${qna.questionDetail != null and !qna.questionDetail.isEmpty()}"
+                               class="question-detail"
+                               th:text="${qna.questionDetail}">상세 질문</p>
+                        </div>
+                    </div>
+
+                    <!-- 답변 영역 (있을 경우만 표시) -->
+                    <div th:if="${qna.hasAnswer}"
+                         class="qna-answer-detail"
+                         th:id="'answer-' + ${iterStat.index}"
+                         style="display: none;">
+                        <div class="qna-header qna-answer">
+                            <span class="qna-badge answer-badge">답변</span>
+                            <div class="qna-text">
+                                <p th:text="${qna.answer}">답변 내용</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 답변 대기 중 표시 -->
+                    <div th:if="${!qna.hasAnswer}" class="qna-waiting">
+                        <span class="waiting-text">답변 대기 중</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q&A 없을 때 -->
+            <div th:if="${qnaList == null or qnaList.isEmpty()}" class="no-qna">
+                <p>아직 등록된 Q&A가 없습니다.</p>
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div class="qna-more-btn-wrap">
+                <button class="qna-more-btn">상품정보 더보기 ˅</button>
+            </div>
+        </div>
+    </section>
+
+
     <section class="related-products">
         <h3>이런 상품은 어때요?</h3>
         <div class="product-list">

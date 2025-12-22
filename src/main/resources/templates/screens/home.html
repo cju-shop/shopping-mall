@@ -31,7 +31,8 @@
         </section>
         <button class="btn-outline-gold">베스트 더보기</button>
     </div>
-    <div th:replace="~{components/_banner :: bannerSlider(${banners})}"></div>
+    <div th:replace="components/_banner :: bannerSlider(banners=${banners})"></div>
+
     <div class="bestArea">
         <h1 class="best-title">신상 모아보기</h1>
         <section class="grid-small grid-4">

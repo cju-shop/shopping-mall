@@ -47,3 +47,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+// 탭 클릭 이벤트 처리
+document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', function() {
+        // 1. 모든 탭에서 active 클래스 제거
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+
+        // 2. 클릭한 탭에 active 클래스 추가
+        this.classList.add('active');
+
+        // 3. 모든 콘텐츠 섹션 숨기기
+        document.querySelectorAll('.tab-content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        // 4. 해당 콘텐츠만 보이기
+        const targetId = this.getAttribute('data-tab');
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+    });
+});
+
+// QnA 관련
+document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        document.querySelectorAll('.tab-content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        const targetId = this.getAttribute('data-tab');
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+    });
+});
+function toggleAnswer(index) {
+    const answerDetail = document.getElementById('answer-' + index);
+
+    if (answerDetail) {
+        if (answerDetail.style.display === 'none' || answerDetail.style.display === '') {
+            answerDetail.style.display = 'block';
+        } else {
+            answerDetail.style.display = 'none';
+        }
+    }
+}

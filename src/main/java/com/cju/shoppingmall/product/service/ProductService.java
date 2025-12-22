@@ -12,7 +12,10 @@ public interface ProductService {
 
     Category createCategory(Category category);
 
+    List<Product> getDailyRecommentProducts();
+
     List<Product> getNewProducts();
+    List<Product> getBestProductsLast7Days(int limit);
 
     Long register(ProductRegisterForm form, Member createdBy);
 }

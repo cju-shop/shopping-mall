@@ -1,7 +1,13 @@
 package com.cju.shoppingmall.product.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.cju.shoppingmall.order.dto.ProductSalesSummaryDto;
+import com.cju.shoppingmall.order.repository.OrderDetailRepository;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.product.entity.*;
@@ -20,13 +26,16 @@ public class ProductServiceImpl implements ProductService {
                               CategoryRepository categoryRepository,
                               OptionTypeRepository optionTypeRepository,
                               OptionValueRepository optionValueRepository,
-                              ProductOptionRepository productOptionRepository
+                              ProductOptionRepository productOptionRepository,
+                              OrderDetailRepository orderDetailRepository
                               ) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.optionTypeRepository = optionTypeRepository;
         this.optionValueRepository = optionValueRepository;
         this.productOptionRepository = productOptionRepository;
+        this.orderDetailRepository = orderDetailRepository;
+
     }
 
     @Override
@@ -42,10 +51,58 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<Product> getNewProducts() {
+    public List<Product> getDailyRecommentProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
 
+    @Override
+    public List<Product> getNewProducts() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+
+        List<Product> newProducts =
+                repository.findTop8ByCreatedAtAfterOrderByCreatedAtDesc(sevenDaysAgo);
+
+        if (newProducts.isEmpty()) {
+            return repository.findTop8ByOrderByCreatedAtDesc();
+        }
+
+        return newProducts;
+    }
+
+    @Override
+    public List<Product> getBestProductsLast7Days(int limit) {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        List<ProductSalesSummaryDto> summaries = orderDetailRepository.findProductSalesLast7Days(sevenDaysAgo);
+        if (summaries.isEmpty()) {
+            return repository.findTop8ByOrderByCreatedAtDesc();
+        }
+
+        List<Long> productIds = new ArrayList<>();
+        int count = 0;
+        for (ProductSalesSummaryDto summary : summaries) {
+            if (count >= limit) break;
+            productIds.add(summary.getProductId());
+            count++;
+        }
+
+        List<Product> products = repository.findByIdIn(productIds);
+
+        // id 순서를 유지하기 위해 map으로 정렬
+        Map<Long, Product> productMap = new HashMap<>();
+        for (Product p : products) {
+            productMap.put(p.getId(), p);
+        }
+
+        List<Product> bestProducts = new ArrayList<>();
+        for (Long id : productIds) {
+            Product p = productMap.get(id);
+            if (p != null) {
+                bestProducts.add(p);
+            }
+        }
+        return bestProducts;
+    }
+}
     public Long register(ProductRegisterForm form, Member createdBy){
         String childName = form.getChildrenCategory() == null ? null : form.getChildrenCategory().trim();
         Category target;

@@ -36,7 +36,7 @@ public class ProductController {
 
         Product product = productService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다: id=" + id));
-
+        model.addAttribute("optionTypes", productService.getOptionViewsByProduct(product.getId()));
         // === 예시 리뷰 데이터 ===
         List<ProductReview> reviewList = productReviewService.getReviewsByProduct(product);
         // === 예시 Q&A 데이터 ===

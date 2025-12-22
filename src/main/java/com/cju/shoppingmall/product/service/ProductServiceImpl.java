@@ -5,9 +5,12 @@ import java.util.Optional;
 
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
+import com.cju.shoppingmall.product.dto.OptionTypeView;
 import com.cju.shoppingmall.product.entity.*;
 import com.cju.shoppingmall.product.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -45,6 +48,33 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getNewProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OptionTypeView> getOptionViewsByProduct(Long productId) {
+        List<ProductOption> productOptions = productOptionRepository.findByProduct_Id(productId);
+
+        List<OptionType> optionTypes = productOptions.stream()
+                .map(ProductOption::getOptionType)
+                .distinct()
+                .toList();
+
+        return optionTypes.stream()
+                .map(optionType -> {
+                    List<String> values = optionValueRepository.findByOptionType_Id(optionType.getId())
+                            .stream()
+                            .map(OptionValue::getValue)
+                            .toList();
+
+                    return new OptionTypeView(
+                            optionType.getId(),
+                            optionType.getName(),
+                            optionType.getDisplayName(),
+                            values
+                    );
+                })
+                .toList();
     }
 
     public Long register(ProductRegisterForm form, Member createdBy){

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
+import com.cju.shoppingmall.product.dto.OptionTypeView;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.Product;
 
@@ -17,4 +18,6 @@ public interface ProductService {
 
     Long register(ProductRegisterForm form, Member createdBy);
     Optional<Product> findById(Long id);
+
+    List<OptionTypeView> getOptionViewsByProduct(Long productId);
 }

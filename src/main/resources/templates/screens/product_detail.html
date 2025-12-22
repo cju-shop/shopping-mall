@@ -37,7 +37,10 @@
 
             </p>
 
-            <h1 class="title" th:text="${product != null} ? ${product.name} : 'More Square Fabric Bed'">More Square Fabric Bed</h1>
+            <h1 class="title"
+                th:text="${product != null ? product.name : '상품명이 없습니다'}">
+                상품명
+            </h1>
 
             <p class="price">
                 <span th:text="${#numbers.formatInteger(product.basePrice, 3, 'COMMA')} + '원'">금액</span>
@@ -50,26 +53,22 @@
             </div>
 
             <div class="options">
-                <label class="opt">
-                    <select>
-                        <option value="" disabled selected hidden>색상을 선택하세요</option>
-                        <option>아이보리</option>
-                        <option>그레이</option>
-                        <option>베이지</option>
+                <label class="opt" th:each="ot : ${optionTypes}">
+                    <select th:attr="data-option-type-id=${ot.id()}">
+                        <option value="" disabled selected hidden
+                                th:text="${ot.displayName()} + '를 선택하세요'">
+                            옵션 선택
+                        </option>
+
+                        <option th:each="v : ${ot.values()}"
+                                th:value="${v}"
+                                th:text="${v}">
+                            옵션값
+                        </option>
                     </select>
                 </label>
-
-                <label class="opt">
-                    <select>
-                        <option value="" disabled selected hidden>사이즈를 선택하세요</option>
-                        <option>S</option>
-                        <option>M</option>
-                        <option>L</option>
-                    </select>
-                </label>
-
-
             </div>
+
             <div class="quantity-box">
                 <p class="qty-label">수량</p>
                 <div class="qty-control">

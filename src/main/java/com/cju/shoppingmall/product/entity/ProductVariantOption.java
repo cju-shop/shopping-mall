@@ -25,6 +25,6 @@ public class ProductVariantOption {
         this.optionValue = optionValue;
     }
 
-    public ProductVariantOption() {
+    protected ProductVariantOption() {
     }
 }

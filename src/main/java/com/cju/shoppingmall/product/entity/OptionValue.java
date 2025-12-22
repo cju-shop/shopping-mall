@@ -27,7 +27,7 @@ public class OptionValue {
         this.value = value;
     }
 
-    public OptionValue() {
+    protected OptionValue() {
 
     }
 }

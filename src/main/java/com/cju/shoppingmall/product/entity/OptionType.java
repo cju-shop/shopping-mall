@@ -24,7 +24,7 @@ public class OptionType {
         this.displayName = displayName;
     }
 
-    public OptionType() {
+    protected OptionType() {
 
     }
 }

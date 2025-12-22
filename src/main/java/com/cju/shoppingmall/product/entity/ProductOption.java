@@ -24,7 +24,7 @@ public class ProductOption {
         this.optionType = optionType;
     }
 
-    public ProductOption() {
+    protected ProductOption() {
 
     }
 }

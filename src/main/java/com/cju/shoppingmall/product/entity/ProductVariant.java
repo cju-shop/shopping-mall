@@ -58,7 +58,7 @@ public class ProductVariant {
         this.createdBy = createdBy;
     }
 
-    public ProductVariant() {
+    protected ProductVariant() {
 
     }
 }

@@ -13,6 +13,7 @@ import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.product.entity.*;
 import com.cju.shoppingmall.product.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -59,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
 
+    @Transactional
     public Long register(ProductRegisterForm form) {
         Member createdBy = findAdminMember();
         Category category = findCategory(form.getChildCategoryId());
@@ -229,11 +231,4 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
-
-
-
-
-
-
-
 }

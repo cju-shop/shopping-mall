@@ -1,4 +1,4 @@
-package com.cju.shoppingmall.auth;
+package com.cju.shoppingmall.auth.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.product.dto.OptionTypeView;
+import com.cju.shoppingmall.product.dto.OptionValueView;
 import com.cju.shoppingmall.product.entity.*;
 import com.cju.shoppingmall.product.repository.*;
 import org.springframework.stereotype.Service;
@@ -62,9 +63,11 @@ public class ProductServiceImpl implements ProductService {
 
         return optionTypes.stream()
                 .map(optionType -> {
-                    List<String> values = optionValueRepository.findByOptionType_Id(optionType.getId())
+
+                    List<OptionValueView> values = optionValueRepository
+                            .findByOptionType_Id(optionType.getId())
                             .stream()
-                            .map(OptionValue::getValue)
+                            .map(ov -> new OptionValueView(ov.getId(), ov.getValue()))
                             .toList();
 
                     return new OptionTypeView(

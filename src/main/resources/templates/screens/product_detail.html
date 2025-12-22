@@ -54,20 +54,19 @@
 
             <div class="options">
                 <label class="opt" th:each="ot : ${optionTypes}">
-                    <select th:attr="data-option-type-id=${ot.id()}">
+                    <select th:attr="data-option-type-id=${ot.id}">
                         <option value="" disabled selected hidden
-                                th:text="${ot.displayName()} + '를 선택하세요'">
-                            옵션 선택
+                                th:text="${ot.displayName} + '를 선택하세요'">
                         </option>
 
-                        <option th:each="v : ${ot.values()}"
-                                th:value="${v}"
-                                th:text="${v}">
-                            옵션값
+                        <option th:each="v : ${ot.values}"
+                                th:value="${v.variantId}"
+                                th:text="${v.value}">
                         </option>
                     </select>
                 </label>
             </div>
+            <input type="hidden" id="selectedVariantId" value="">
 
             <div class="quantity-box">
                 <p class="qty-label">수량</p>
@@ -88,8 +87,7 @@
                 <button class="btn btn-dark">바로 구매</button>
 
                 <!-- 장바구니 버튼 -->
-                <button class="btn btn-outline"
-                        th:onclick="'addToCart(' + ${product.id} + ')'">
+                <button class="btn btn-outline" onclick="addToCart()">
                     <img src="/img/icons/ant-design_shopping-cart-outlined.png" alt="장바구니" class="cart-icon">
                 </button>
 

@@ -1,23 +1,29 @@
 package com.cju.shoppingmall.cart.controller;
 
 import com.cju.shoppingmall.cart.service.CartService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequiredArgsConstructor
+@RestController
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/cart/add")
-    public String addToCart(@RequestParam("productId") Long productId,
-                            @RequestParam("quantity") Integer quantity) {
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
 
-        cartService.addToCart(productId, quantity);
-
-        return "redirect:/product/detail?id=" + productId;
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(
+            @RequestParam("productVariantId") Long productVariantId,
+            @RequestParam("quantity") Long quantity
+    ) {
+        Long memberId = 1L; // 임시(로그인 전까지)
+        cartService.addToCart(productVariantId, quantity, memberId);
+        return ResponseEntity.ok().build();
     }
 }

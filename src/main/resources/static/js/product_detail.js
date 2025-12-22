@@ -50,8 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
     optionSelects.forEach(select => {
         select.addEventListener("change", () => {
             if (isAllOptionsSelected()) {
-                updateTotalPrice();   // 🔥 전부 선택됐을 때만
+                const lastSelect = optionSelects[optionSelects.length - 1];
+                document.getElementById("selectedVariantId").value = lastSelect.value;
+
+                console.log("✅ selectedVariantId =", lastSelect.value);
+                updateTotalPrice();
             } else {
+                document.getElementById("selectedVariantId").value = "";
                 document.querySelector(".total-price strong").textContent = "0원";
             }
         });
@@ -128,12 +133,32 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ===============================
    장바구니
 =============================== */
-function addToCart(productId) {
+function getSelectedOptionIds() {
+    const ids = [];
+    document.querySelectorAll(".options select").forEach(select => {
+        ids.push(select.selectedOptions[0].value);
+    });
+    return ids.join("-");
+}
+
+function addToCart() {
+
     const qty = document.getElementById("quantity").value;
 
-    fetch(`/cart/add?productId=${productId}&quantity=${qty}`, {
+    const productVariantId = 1001;
+
+    fetch(`/cart/add?productVariantId=${productVariantId}&quantity=${qty}`, {
         method: "POST"
-    }).then(() => {
-        alert("장바구니에 추가되었습니다!");
-    });
+    })
+        .then(res => {
+            if (!res.ok) {
+                alert("장바구니 추가 실패");
+                return;
+            }
+            alert("장바구니에 추가되었습니다!");
+        })
+        .catch(err => {
+            console.error(err);
+            alert("에러 발생");
+        });
 }

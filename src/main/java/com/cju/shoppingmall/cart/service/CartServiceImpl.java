@@ -1,47 +1,80 @@
 package com.cju.shoppingmall.cart.service;
 
 import com.cju.shoppingmall.cart.entity.Cart;
+import com.cju.shoppingmall.cart.entity.CartDetail;
+import com.cju.shoppingmall.cart.repository.CartDetailRepository;
 import com.cju.shoppingmall.cart.repository.CartRepository;
 import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.member.repository.MemberRepository;
-import com.cju.shoppingmall.product.entity.Product;
-import com.cju.shoppingmall.product.repository.ProductRepository;
+import com.cju.shoppingmall.product.entity.ProductVariant;
+import com.cju.shoppingmall.product.repository.ProductVariantRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
+@Transactional
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
+    private final CartDetailRepository cartDetailRepository;
+    private final ProductVariantRepository productVariantRepository;
     private final MemberRepository memberRepository;
 
-    public CartServiceImpl(CartRepository cartRepository, ProductRepository productRepository, MemberRepository memberRepository) {
+    public CartServiceImpl(
+            CartRepository cartRepository,
+            CartDetailRepository cartDetailRepository,
+            ProductVariantRepository productVariantRepository,
+            MemberRepository memberRepository
+    ) {
         this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
+        this.cartDetailRepository = cartDetailRepository;
+        this.productVariantRepository = productVariantRepository;
         this.memberRepository = memberRepository;
     }
 
     @Override
-    @Transactional
-    public void addToCart(Long productId, Integer quantity) {
+    public void addToCart(Long productVariantId, Long qty, Long memberId) {
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품 없음: id=" + productId));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
 
-        long subtotal = product.getBasePrice() * quantity;
+        Cart cart = cartRepository.findByMember(member)
+                .orElseGet(() -> cartRepository.save(
+                        new Cart(member, 0, 0L, 0L, 0L)
+                ));
 
-        Member member = memberRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("멤버 없음"));
+        ProductVariant variant = productVariantRepository.findById(productVariantId)
+                .orElseThrow(() -> new IllegalArgumentException("상품 옵션 없음"));
 
-        Cart cart = new Cart(
-                member,
-                quantity,
-                subtotal,
-                0L,
-                subtotal
-        );
+        CartDetail detail = cartDetailRepository
+                .findByCartAndProductVariant(cart, variant)
+                .orElse(null);
 
-        cartRepository.save(cart);
+        if (detail == null) {
+            detail = new CartDetail(cart, variant, qty);
+            cartDetailRepository.save(detail);
+        } else {
+            detail.increaseQty(qty);
+        }
+
+        recalculateCart(cart);
     }
+
+
+    private void recalculateCart(Cart cart) {
+        List<CartDetail> details = cartDetailRepository.findByCart(cart);
+
+        int totalCount = 0;
+        long subtotal = 0L;
+
+        for (CartDetail d : details) {
+            totalCount += d.getQty();
+            subtotal += d.getProductVariant().getPrice() * d.getQty();
+        }
+
+        cart.updateAmounts(totalCount, subtotal, 0L);
+    }
+
 }

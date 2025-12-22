@@ -29,6 +29,12 @@ public class Cart {
         this.discountAmount = discountAmount;
         this.totalAmount = totalAmount;
     }
+    public void updateAmounts(int totalCount, long subtotal, long discount) {
+        this.totalCount = totalCount;
+        this.subtotalAmount = subtotal;
+        this.discountAmount = discount;
+        this.totalAmount = subtotal - discount;
+    }
 
     public Cart() {
     }

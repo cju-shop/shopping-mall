@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface OptionValueRepository extends JpaRepository<OptionValue, Long> {
     Optional<OptionValue> findByOptionTypeIdAndValue(Long optionTypeId, String value);
 
+
 }

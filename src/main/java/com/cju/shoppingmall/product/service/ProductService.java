@@ -3,7 +3,6 @@ package com.cju.shoppingmall.product.service;
 import java.util.List;
 
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
-import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.Product;
 
@@ -17,5 +16,5 @@ public interface ProductService {
     List<Product> getNewProducts();
     List<Product> getBestProductsLast7Days(int limit);
 
-    Long register(ProductRegisterForm form, Member createdBy);
+    Long register(ProductRegisterForm form);
 }

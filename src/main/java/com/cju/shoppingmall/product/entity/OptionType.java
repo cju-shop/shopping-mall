@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 public class OptionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +18,14 @@ public class OptionType {
     private String name;
     @Column(nullable = false)
     private String displayName;
+
+    public OptionType(String name, String displayName) {
+        this.name = name;
+        this.displayName = displayName;
+    }
+
+    protected OptionType() {
+
+    }
 }
+

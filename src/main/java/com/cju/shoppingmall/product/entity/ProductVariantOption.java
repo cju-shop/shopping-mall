@@ -19,4 +19,12 @@ public class ProductVariantOption {
     @JoinColumn(name = "option_value_id")
     private OptionValue optionValue;
 
+
+    public ProductVariantOption(ProductVariant productVariant, OptionValue optionValue) {
+        this.productVariant = productVariant;
+        this.optionValue = optionValue;
+    }
+
+    protected ProductVariantOption() {
+    }
 }

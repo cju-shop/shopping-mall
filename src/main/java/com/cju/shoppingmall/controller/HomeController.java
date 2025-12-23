@@ -14,18 +14,24 @@ import com.cju.shoppingmall.member.entity.MemberRole;
 import com.cju.shoppingmall.member.service.MemberService;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.Product;
+import com.cju.shoppingmall.product.entity.AffiliateAd;
+
 import com.cju.shoppingmall.product.service.ProductService;
+import com.cju.shoppingmall.product.service.AffiliateAdService;
 
 @Controller
 public class HomeController {
 
     private final ProductService productService;
     private final MemberService memberService;
+    private final AffiliateAdService affiliateAdService;
 
-    public HomeController(ProductService productService, MemberService memberService) {
+    public HomeController(ProductService productService, MemberService memberService, AffiliateAdService affiliateAdService) {
         this.productService = productService;
         this.memberService = memberService;
+        this.affiliateAdService = affiliateAdService;
     }
+
 
     @GetMapping("/create/home-data")
     public String prepareHomeData() {
@@ -46,33 +52,13 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<Product> dailyRecommentProducts = productService.getNewProducts();
-        List<Map<String, Object>> bestProducts = new ArrayList<>();
-        List<Map<String, Object>> newProducts = new ArrayList<>();
+        List<Product> dailyRecommentProducts = productService.getDailyRecommentProducts();
+        List<Product> newProducts = productService.getNewProducts();
+        List<Product> bestProducts = productService.getBestProductsLast7Days(8);
 
-        for (int i = 1; i <= 8; i++) {
-            Map<String, Object> p = new HashMap<>();
-            p.put("id", i);
-            p.put("name", "라이트 니트 카디건 #" + i);
-            p.put("basePrice", 39900 + (i % 5) * 1000);
-            p.put("thumbnail", "https://picsum.photos/seed/" + i + "/600/450");
-            bestProducts.add(p);
-        }
-        for (int i = 1; i <= 8; i++) {
-            Map<String, Object> p = new HashMap<>();
-            p.put("id", i);
-            p.put("name", "라이트 니트 카디건 #" + i);
-            p.put("basePrice", 39900 + (i % 5) * 1000);
-            p.put("thumbnail", "https://picsum.photos/seed/" + i + "/600/450");
-            newProducts.add(p);
-        }
+        List<AffiliateAd> banners = affiliateAdService.getActiveAds();
 
-        List<Map<String, String>> banners = new ArrayList<>();
-        banners.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/ad1", "alt", "제휴사 광고 1"));
-        banners.add(Map.of("img", "/img/ad2.jpg", "href", "https://example.com/ad2", "alt", "제휴사 광고 2"));
-        banners.add(Map.of("img", "/img/ad3.jpg", "href", "https://example.com/ad3", "alt", "제휴사 광고 3"));
-
-        //제품광고(ad) 리스트
+        //제품광고(ad) 리스트 (상단)
         List<Map<String, String>> ads = new ArrayList<>();
         ads.add(Map.of("img", "/img/ad1.jpg", "href", "https://example.com/productAd1", "alt", "제품 광고 1"));
         ads.add(Map.of("img", "/img/ad2.jpg", "href", "https://example.com/productAd2", "alt", "제품 광고 2"));
@@ -82,8 +68,8 @@ public class HomeController {
         model.addAttribute("ads", ads);
 
         model.addAttribute("todayRecommendProducts", dailyRecommentProducts);
-        model.addAttribute("bestProducts", bestProducts);
         model.addAttribute("newProducts", newProducts);
+        model.addAttribute("bestProducts", bestProducts);
         return "screens/home";
     }
 

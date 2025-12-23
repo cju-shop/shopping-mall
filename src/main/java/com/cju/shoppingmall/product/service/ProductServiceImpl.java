@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<Product> getNewProducts() {
+    public List<Product> getDailyRecommentProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
 
@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     private Member findAdminMember() {
-        return memberRepository.findByUsername("admin")
+        return memberRepository.findByUsername("user2")
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저 없음"));
     }
 

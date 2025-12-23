@@ -2,19 +2,17 @@ package com.cju.shoppingmall.order.entity;
 
 import com.cju.shoppingmall.member.entity.Member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     @Id
@@ -34,5 +32,9 @@ public class Order {
     private Long shippingPrice;
     @Column(nullable = false)
     private OrderStatus status;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
 }

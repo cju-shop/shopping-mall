@@ -1,13 +1,9 @@
 package com.cju.shoppingmall.product.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "product_variant_option")
 @IdClass(ProductVariantOptionId.class)
 public class ProductVariantOption {
     @Id

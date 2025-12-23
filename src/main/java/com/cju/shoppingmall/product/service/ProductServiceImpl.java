@@ -1,11 +1,12 @@
 package com.cju.shoppingmall.product.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.cju.shoppingmall.member.repository.MemberRepository;
+import com.cju.shoppingmall.order.dto.ProductSalesSummaryDto;
+import com.cju.shoppingmall.order.repository.OrderDetailRepository;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionTypeForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionValueForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
@@ -25,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final MemberRepository memberRepository;
     private final ProductVariantRepository productVariantRepository;
     private final ProductVariantOptionRepository productVariantOptionRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public ProductServiceImpl(ProductRepository repository,
                               CategoryRepository categoryRepository,
@@ -33,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
                               ProductOptionRepository productOptionRepository,
                               MemberRepository memberRepository,
                               ProductVariantRepository productVariantRepository,
-                              ProductVariantOptionRepository productVariantOptionRepository) {
+                              ProductVariantOptionRepository productVariantOptionRepository, OrderDetailRepository orderDetailRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.optionTypeRepository = optionTypeRepository;
@@ -42,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
         this.memberRepository = memberRepository;
         this.productVariantRepository = productVariantRepository;
         this.productVariantOptionRepository = productVariantOptionRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     @Override
@@ -58,6 +61,52 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getDailyRecommentProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
+    }
+    public List<Product> getNewProducts() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+
+        List<Product> newProducts =
+                repository.findTop8ByCreatedAtAfterOrderByCreatedAtDesc(sevenDaysAgo);
+
+        if (newProducts.isEmpty()) {
+            return repository.findTop8ByOrderByCreatedAtDesc();
+        }
+
+        return newProducts;
+    }
+
+    @Override
+    public List<Product> getBestProductsLast7Days(int limit) {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        List<ProductSalesSummaryDto> summaries = orderDetailRepository.findProductSalesLast7Days(sevenDaysAgo);
+        if (summaries.isEmpty()) {
+            return repository.findTop8ByOrderByCreatedAtDesc();
+        }
+
+        List<Long> productIds = new ArrayList<>();
+        int count = 0;
+        for (ProductSalesSummaryDto summary : summaries) {
+            if (count >= limit) break;
+            productIds.add(summary.getProductId());
+            count++;
+        }
+
+        List<Product> products = repository.findByIdIn(productIds);
+
+        // id 순서를 유지하기 위해 map으로 정렬
+        Map<Long, Product> productMap = new HashMap<>();
+        for (Product p : products) {
+            productMap.put(p.getId(), p);
+        }
+
+        List<Product> bestProducts = new ArrayList<>();
+        for (Long id : productIds) {
+            Product p = productMap.get(id);
+            if (p != null) {
+                bestProducts.add(p);
+            }
+        }
+        return bestProducts;
     }
 
     @Transactional

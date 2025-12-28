@@ -11,14 +11,16 @@ import java.util.Optional;
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long> {
 
     @Query(value = """
-        SELECT pv.id
-        FROM product_variant pv
-        JOIN product_variant_option pvo ON pvo.product_variant_id = pv.id
-        WHERE pv.product_id = :productId
+    SELECT pv.id
+    FROM product_variant pv
+    WHERE pv.product_id = :productId
+      AND (
+        SELECT COUNT(DISTINCT pvo.option_value_id)
+        FROM product_variant_option pvo
+        WHERE pvo.product_variant_id = pv.id
           AND pvo.option_value_id IN (:optionValueIds)
-        GROUP BY pv.id
-        HAVING COUNT(DISTINCT pvo.option_value_id) = :cnt
-        """, nativeQuery = true)
+      ) = :cnt
+    """, nativeQuery = true)
     Optional<Long> findVariantIdByProductAndOptionValues(
             @Param("productId") Long productId,
             @Param("optionValueIds") List<Long> optionValueIds,

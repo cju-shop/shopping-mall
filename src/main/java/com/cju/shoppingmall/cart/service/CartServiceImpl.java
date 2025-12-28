@@ -77,4 +77,14 @@ public class CartServiceImpl implements CartService {
         cart.updateAmounts(totalCount, subtotal, 0L);
     }
 
+    @Override
+    public void addToCartByOptions(Long productId, List<Long> optionValueIds, Long qty, Long memberId) {
+
+        Long variantId = productVariantRepository
+                .findVariantIdByProductAndOptionValues(productId, optionValueIds, optionValueIds.size())
+                .orElseThrow(() -> new IllegalArgumentException("해당 옵션 조합 없음"));
+
+        addToCart(variantId, qty, memberId); // ✅ 기존 로직 재사용
+    }
+
 }

@@ -60,13 +60,14 @@
                         </option>
 
                         <option th:each="v : ${ot.values}"
-                                th:value="${v.variantId}"
+                                th:value="${v.optionValueId}"
                                 th:text="${v.value}">
                         </option>
                     </select>
                 </label>
             </div>
-            <input type="hidden" id="selectedVariantId" value="">
+            <input type="hidden" id="productId" th:value="${product.id}">
+
 
             <div class="quantity-box">
                 <p class="qty-label">수량</p>

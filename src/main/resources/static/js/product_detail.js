@@ -50,13 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
     optionSelects.forEach(select => {
         select.addEventListener("change", () => {
             if (isAllOptionsSelected()) {
-                const lastSelect = optionSelects[optionSelects.length - 1];
-                document.getElementById("selectedVariantId").value = lastSelect.value;
-
-                console.log("✅ selectedVariantId =", lastSelect.value);
+                console.log("✅ 옵션 모두 선택됨:", Array.from(optionSelects).map(s => s.value));
                 updateTotalPrice();
             } else {
-                document.getElementById("selectedVariantId").value = "";
                 document.querySelector(".total-price strong").textContent = "0원";
             }
         });
@@ -142,23 +138,26 @@ function getSelectedOptionIds() {
 }
 
 function addToCart() {
+    const qty = parseInt(document.getElementById("quantity").value, 10) || 1;
+    const productId = parseInt(document.getElementById("productId").value, 10);
 
-    const qty = document.getElementById("quantity").value;
+    const optionValueIds = Array.from(document.querySelectorAll(".options select"))
+        .map(s => parseInt(s.value, 10));
 
-    const productVariantId = 1001;
+    if (optionValueIds.some(v => !v)) {
+        alert("옵션을 모두 선택해주세요!");
+        return;
+    }
 
-    fetch(`/cart/add?productVariantId=${productVariantId}&quantity=${qty}`, {
-        method: "POST"
+    fetch("/cart/add-by-options", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ productId, optionValueIds, quantity: qty })
     })
         .then(res => {
-            if (!res.ok) {
-                alert("장바구니 추가 실패");
-                return;
-            }
+            if (!res.ok) throw new Error();
             alert("장바구니에 추가되었습니다!");
         })
-        .catch(err => {
-            console.error(err);
-            alert("에러 발생");
-        });
+        .catch(() => alert("장바구니 추가 실패"));
 }
+

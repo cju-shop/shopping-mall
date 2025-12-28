@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -26,4 +28,17 @@ public class CartController {
         cartService.addToCart(productVariantId, quantity, memberId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/add-by-options")
+    public ResponseEntity<?> addToCartByOptions(@org.springframework.web.bind.annotation.RequestBody AddToCartByOptionsRequest req) {
+        Long memberId = 1L; // 임시
+        cartService.addToCartByOptions(req.productId(), req.optionValueIds(), req.quantity(), memberId);
+        return ResponseEntity.ok().build();
+    }
+
+    public record AddToCartByOptionsRequest(
+            Long productId,
+            List<Long> optionValueIds,
+            Long quantity
+    ) {}
 }

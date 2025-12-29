@@ -62,6 +62,8 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getDailyRecommentProducts() {
         return repository.findTop4ByOrderByCreatedAtDesc();
     }
+
+    @Override
     public List<Product> getNewProducts() {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
 

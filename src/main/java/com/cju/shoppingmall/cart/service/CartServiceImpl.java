@@ -8,8 +8,8 @@ import com.cju.shoppingmall.member.entity.Member;
 import com.cju.shoppingmall.member.repository.MemberRepository;
 import com.cju.shoppingmall.product.entity.ProductVariant;
 import com.cju.shoppingmall.product.repository.ProductVariantRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class CartServiceImpl implements CartService {
 
         Cart cart = cartRepository.findByMember(member)
                 .orElseGet(() -> cartRepository.save(
-                        new Cart(member, 0, 0L, 0L, 0L)
+                        new Cart(member, 0L, 0L, 0L, 0L)
                 ));
 
         ProductVariant variant = productVariantRepository.findById(productVariantId)
@@ -66,7 +66,7 @@ public class CartServiceImpl implements CartService {
     private void recalculateCart(Cart cart) {
         List<CartDetail> details = cartDetailRepository.findByCart(cart);
 
-        int totalCount = 0;
+        long totalCount = 0;
         long subtotal = 0L;
 
         for (CartDetail d : details) {

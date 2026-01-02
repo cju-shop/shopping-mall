@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
 @IdClass(ProductOptionId.class)
 public class ProductOption {

@@ -22,4 +22,11 @@ public class ProductOption {
     @JoinColumn(name = "option_type_id")
     private OptionType optionType;
 
+    protected ProductOption() {
+    }
+
+    public ProductOption(Product product, OptionType optionType) {
+        this.product = product;
+        this.optionType = optionType;
+    }
 }

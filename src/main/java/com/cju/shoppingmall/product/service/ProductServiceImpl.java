@@ -135,9 +135,7 @@ public class ProductServiceImpl implements ProductService {
                 boolean exists = productOptionRepository
                         .existsByProductIdAndOptionTypeId(saved.getId(), optionType.getId());
                 if (!exists) {
-                    ProductOption po = new ProductOption();
-                    po.setProduct(saved);
-                    po.setOptionType(optionType);
+                    ProductOption po = new ProductOption(saved, optionType);
                     productOptionRepository.save(po);
                 }
             }

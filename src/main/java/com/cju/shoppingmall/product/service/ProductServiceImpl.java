@@ -80,69 +80,6 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    public Long register(ProductRegisterForm form, Member createdBy){
-        String childName = form.getChildrenCategory() == null ? null : form.getChildrenCategory().trim();
-        Category target;
-        if (childName != null && !childName.isEmpty()) {
-            target = categoryRepository.findByName(childName)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException("해당 하위 카테고리를 찾을 수 없습니다: " + childName));
-        } else {
-            throw new IllegalArgumentException("카테고리 정보가 없습니다.");
-        }
-
-        Product product = new Product(
-                form.getName(),
-                "test.jpg",
-                null,
-                form.getPrice(),
-                target,
-                createdBy
-        );
-
-        Product saved = repository.save(product);
-
-        if (form.getOptionTypes() != null) {
-            for (ProductRegisterForm.OptionTypeForm typeForm : form.getOptionTypes()) {
-                String name = typeForm.getName();  // 예: "color" 또는 "size"
-
-                OptionType optionType = optionTypeRepository
-                        .findByName(name)
-                        .orElseGet(() -> {
-                            OptionType t = new OptionType();
-                            t.setName(name);
-                            t.setDisplayName(name);
-                            return optionTypeRepository.save(t);
-                        });
-
-                // 2️⃣ 옵션 값 등록
-                if (typeForm.getValues() != null) {
-                    for (ProductRegisterForm.OptionValueForm vf : typeForm.getValues()) {
-                        String val = vf.getValue();
-                        if (val == null || val.isBlank()) continue;
-
-                        optionValueRepository
-                                .findByOptionTypeIdAndValue(optionType.getId(), val)
-                                .orElseGet(() -> {
-                                    OptionValue ov = new OptionValue();
-                                    ov.setOptionType(optionType);
-                                    ov.setValue(val);
-                                    return optionValueRepository.save(ov);
-                                });
-                    }
-                }
-
-                boolean exists = productOptionRepository
-                        .existsByProductIdAndOptionTypeId(saved.getId(), optionType.getId());
-                if (!exists) {
-                    ProductOption po = new ProductOption(saved, optionType);
-                    productOptionRepository.save(po);
-                }
-            }
-        }
-        return product.getId();
-    }
-
     @Override
     public Optional<Product> findById(Long id) {
         return repository.findById(id);

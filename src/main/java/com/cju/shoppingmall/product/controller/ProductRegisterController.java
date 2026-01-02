@@ -45,15 +45,5 @@ public class ProductRegisterController {
                 .toList();
     }
 
-    @PostMapping("/register")
-    public String registerProduct(@ModelAttribute ProductRegisterForm form) {
-        Member member = memberRepository.findByUsername("testID")
-                .orElseGet(() -> memberRepository.save(
-                        new Member("testID", "nick", "이유진", "testPW",
-                                "010-1234-5678", "testEmail", MemberRole.CONSUMER)));
-        Long productId = productService.register(form, member); // 작성자 고정값
-
-        return "redirect:/product/register";
-    }
 
 }

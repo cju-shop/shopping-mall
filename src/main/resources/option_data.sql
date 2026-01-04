@@ -44,10 +44,10 @@ VALUES
 INSERT INTO product_variant
 (id, product_id, price, discount_rate, stock_qty, is_active, fingerprint, created_at, created_by)
 VALUES
-    (1001, 1, 120000, NULL, 10, true, 'fp1', NOW(), 1),
-    (2003, 1,  46000, 0.03, 5,  true, 'fp2', NOW(), 1),
-    (3001, 1, 120000, NULL, 10, true, 'fp_free_beige', NOW(), 1), -- Free + Beige
-    (3002, 1, 120000, NULL, 10, true, 'fp_l_green',    NOW(), 1);
+    (1001, 1, 120000, NULL, 10, true, '1-3', NOW(), 1), -- Free + Green
+    (2003, 1,  46000, 0.03, 5,  true, '2-4', NOW(), 1), -- L + Beige
+    (3001, 1, 120000, NULL, 10, true, '1-4', NOW(), 1), -- Free + Beige
+    (3002, 1, 120000, NULL, 10, true, '2-3', NOW(), 1);
 -- ===============================
 -- 상품 변형 ↔ 옵션 값 매핑 (핵심)
 -- ===============================
@@ -56,9 +56,12 @@ INSERT INTO product_variant_option
 VALUES
     (1001, 1), -- Free
     (1001, 3), -- Green
+
     (2003, 2), -- L
     (2003, 4), -- Beige
-    (3001, 1),
-    (3001, 4),
-    (3002, 2),
-    (3002, 3);
+
+    (3001, 1), -- Free
+    (3001, 4), -- Beige
+
+    (3002, 2), -- L
+    (3002, 3); -- Green

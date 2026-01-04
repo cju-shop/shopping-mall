@@ -743,3 +743,18 @@ body {
     border: 1px solid #ddd; background: #fff;
     border-radius: 6px;
 }
+/* 별 기본(빈 별) */
+.rating .star,
+.review-stars .star {
+    font-size: 35px;   /* ⬅ 기존 18px → 24px */
+    color: #ddd;
+    line-height: 1;
+    margin-right: 2px; /* 살짝 간격도 여유 */
+}
+
+/* 채워진 별 */
+.rating .star.filled,
+.review-stars .star.filled {
+    color: #f5c518;
+}
+

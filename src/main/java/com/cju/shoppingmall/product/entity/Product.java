@@ -1,5 +1,6 @@
 package com.cju.shoppingmall.product.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class Product {
     private Long basePrice;
     @Column
     private Double discountRate;
+    @Column(precision = 2, scale = 1)
+    private BigDecimal rating;
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
     @CreatedDate

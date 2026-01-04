@@ -46,10 +46,15 @@
                 <span th:text="${#numbers.formatInteger(product.basePrice, 3, 'COMMA')} + '원'">금액</span>
             </p>
 
-            <div class="rating">
-                <span class="stars" aria-label="별점 4.8/5">⭐⭐⭐⭐⭐</span>
-                <span class="score">4.8</span>
-                <span class="count">(124)</span>
+            <div class="rating"
+                 th:attr="data-rating=${product.rating}, data-count=${reviewList != null ? reviewList.size() : 0}">
+                <span class="stars" aria-hidden="true">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </span>
+                <span class="score" id="ratingScore"
+                      th:text="${product.rating != null ? product.rating : '0.0'}">0.0</span>
+                <span class="count" id="ratingCount"
+                      th:text="'(' + (${reviewList != null ? reviewList.size() : 0}) + ')'">(0)</span>
             </div>
 
             <div class="options">

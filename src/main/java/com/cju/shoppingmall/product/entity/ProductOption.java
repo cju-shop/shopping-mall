@@ -7,7 +7,6 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -22,11 +21,12 @@ public class ProductOption {
     @JoinColumn(name = "option_type_id")
     private OptionType optionType;
 
-    protected ProductOption() {
-    }
-
     public ProductOption(Product product, OptionType optionType) {
         this.product = product;
         this.optionType = optionType;
+    }
+
+    protected ProductOption() {
+
     }
 }

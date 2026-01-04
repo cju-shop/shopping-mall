@@ -1,29 +1,45 @@
 package com.cju.shoppingmall.product.controller;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter
 public class ProductRegisterForm {
-    private String category;
-    private String childrenCategory;
+
+    private Long parentCategoryId;
+    private Long childCategoryId;
+
     private String name;
     private Long price;
     private MultipartFile image;
-    private List<OptionTypeForm> optionTypes = new ArrayList<>();
 
-    @Getter @Setter
+    private List<OptionTypeForm> optionTypes = new ArrayList<>();
+    private List<VariantForm> variants = new ArrayList<>();
+
+
+    @Getter
     public static class OptionTypeForm {
         private String name;
         private List<OptionValueForm> values = new ArrayList<>();
+
     }
 
-    @Getter @Setter
+    @Getter
     public static class OptionValueForm {
         private String value;
+
+    }
+
+    @Getter
+    public static class VariantForm {
+        private String label;
+        private Long extraPrice;
+        private Long stockQty;
+        private Boolean active;
+
     }
 }
+

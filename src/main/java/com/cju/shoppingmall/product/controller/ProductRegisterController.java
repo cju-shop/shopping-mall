@@ -1,16 +1,13 @@
 package com.cju.shoppingmall.product.controller;
 
-
-import com.cju.shoppingmall.member.entity.Member;
-import com.cju.shoppingmall.member.entity.MemberRole;
 import com.cju.shoppingmall.member.repository.MemberRepository;
-import com.cju.shoppingmall.member.service.MemberService;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.CategoryDto;
 import com.cju.shoppingmall.product.repository.CategoryRepository;
 import com.cju.shoppingmall.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +23,11 @@ public class ProductRegisterController {
         this.productService = productService;
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepositoryq;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.initDirectFieldAccess();
     }
 
     @GetMapping("/product/register")
@@ -45,5 +47,11 @@ public class ProductRegisterController {
                 .toList();
     }
 
+    @PostMapping("/register")
+    public String registerProduct(@ModelAttribute ProductRegisterForm form) {
+        productService.register(form);
+
+        return "redirect:/product/register";
+    }
 
 }

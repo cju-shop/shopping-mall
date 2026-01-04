@@ -9,4 +9,5 @@ public interface OptionValueRepository extends JpaRepository<OptionValue, Long> 
     Optional<OptionValue> findByOptionTypeIdAndValue(Long optionTypeId, String value);
     List<OptionValue> findByOptionType_Id(Long optionTypeId);
 
+
 }

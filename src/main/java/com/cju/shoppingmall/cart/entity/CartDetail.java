@@ -22,4 +22,16 @@ public class CartDetail {
 
     @Column
     private Long qty;
+
+    public CartDetail(Cart cart, ProductVariant productVariant, Long qty) {
+        this.cart = cart;
+        this.productVariant = productVariant;
+        this.qty = qty;
+    }
+    public void increaseQty(Long qty) {
+        this.qty += qty;
+    }
+
+    protected CartDetail() {
+    }
 }

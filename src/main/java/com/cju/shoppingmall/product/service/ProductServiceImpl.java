@@ -11,6 +11,8 @@ import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionTypeFor
 import com.cju.shoppingmall.product.controller.ProductRegisterForm.OptionValueForm;
 import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.member.entity.Member;
+import com.cju.shoppingmall.product.dto.OptionTypeView;
+import com.cju.shoppingmall.product.dto.OptionValueView;
 import com.cju.shoppingmall.product.entity.*;
 import com.cju.shoppingmall.product.repository.*;
 import org.springframework.stereotype.Service;
@@ -109,6 +111,40 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return bestProducts;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OptionTypeView> getOptionViewsByProduct(Long productId) {
+        List<ProductOption> productOptions = productOptionRepository.findByProduct_Id(productId);
+
+        List<OptionType> optionTypes = productOptions.stream()
+                .map(ProductOption::getOptionType)
+                .distinct()
+                .toList();
+
+        return optionTypes.stream()
+                .map(optionType -> {
+
+                    List<OptionValueView> values = optionValueRepository
+                            .findByOptionType_Id(optionType.getId())
+                            .stream()
+                            .map(ov -> new OptionValueView(ov.getId(), ov.getValue()))
+                            .toList();
+
+                    return new OptionTypeView(
+                            optionType.getId(),
+                            optionType.getName(),
+                            optionType.getDisplayName(),
+                            values
+                    );
+                })
+                .toList();
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return repository.findById(id);
     }
 
     @Transactional

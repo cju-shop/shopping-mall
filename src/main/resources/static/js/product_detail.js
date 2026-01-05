@@ -1,102 +1,163 @@
-// 썸네일 클릭 → 프리뷰 교체
-const preview = document.getElementById('previewImg');
-document.getElementById('thumbs').addEventListener('click', (e) => {
-    const t = e.target;
-    if (!t.classList.contains('thumb')) return;
-    document.querySelectorAll('.thumb').forEach(el => el.classList.remove('is-active'));
-    t.classList.add('is-active');
-    preview.src = t.src.replace('/200/150','/800/600'); // 샘플 사이즈 교체
-});
+document.addEventListener("DOMContentLoaded", () => {
 
-// 수량 증가/감소
-document.querySelectorAll('.qty-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const delta = Number(btn.dataset.delta);
-        const input = document.getElementById('qty');
-        const next = Math.max(1, (Number(input.value)||1) + delta);
-        input.value = next;
+    /* ===============================
+       썸네일 → 프리뷰
+    =============================== */
+    const preview = document.getElementById("previewImg");
+    const thumbs = document.getElementById("thumbs");
+
+    if (thumbs && preview) {
+        thumbs.addEventListener("click", (e) => {
+            const t = e.target;
+            if (!t.classList.contains("thumb")) return;
+
+            document.querySelectorAll(".thumb").forEach(el => el.classList.remove("is-active"));
+            t.classList.add("is-active");
+            preview.src = t.src.replace("/200/150", "/800/600");
+        });
+    }
+
+    /* ===============================
+       옵션 select들
+    =============================== */
+    const optionSelects = document.querySelectorAll(".options select");
+
+    /* ===============================
+       ⭐ 총 금액 계산 함수
+    =============================== */
+    function updateTotalPrice() {
+        const qty = parseInt(document.getElementById("quantity").value, 10) || 1;
+
+        const priceText = document.querySelector(".price span")?.textContent || "0";
+        const basePrice = parseInt(priceText.replace(/[^0-9]/g, ""), 10) || 0;
+
+        const total = basePrice * qty;
+
+        document.querySelector(".total-price strong").textContent =
+            total.toLocaleString("ko-KR") + "원";
+    }
+
+    /* ===============================
+       ⭐ 모든 옵션이 선택됐는지 체크
+    =============================== */
+    function isAllOptionsSelected() {
+        return Array.from(optionSelects).every(select => select.value !== "");
+    }
+
+    /* ===============================
+       ⭐ 옵션 변경 시
+    =============================== */
+    optionSelects.forEach(select => {
+        select.addEventListener("change", () => {
+            if (isAllOptionsSelected()) {
+                console.log("✅ 옵션 모두 선택됨:", Array.from(optionSelects).map(s => s.value));
+                updateTotalPrice();
+            } else {
+                document.querySelector(".total-price strong").textContent = "0원";
+            }
+        });
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('click', (e) => {
-        const likeBtn = e.target.closest('.like-btn');
+    /* ===============================
+       수량 증가 / 감소
+    =============================== */
+    window.changeQty = function (delta) {
+        const qtyInput = document.getElementById("quantity");
+        let qty = parseInt(qtyInput.value, 10) || 1;
+
+        qty += delta;
+        if (qty < 1) qty = 1;
+
+        qtyInput.value = qty;
+
+        // ⭐ 옵션이 모두 선택된 경우에만 계산
+        if (isAllOptionsSelected()) {
+            updateTotalPrice();
+        }
+    };
+
+    /* ===============================
+       찜하기 버튼
+    =============================== */
+    document.addEventListener("click", (e) => {
+        const likeBtn = e.target.closest(".like-btn");
         if (!likeBtn) return;
 
-        const icon = likeBtn.querySelector('.heart-icon');
-        likeBtn.classList.toggle('active');
-        icon.src = likeBtn.classList.contains('active')
-            ? '/img/icons/heart-fill.png'
-            : '/img/icons/heart-outline.png';
-    });
-});
+        const icon = likeBtn.querySelector(".heart-icon");
+        likeBtn.classList.toggle("active");
 
-document.addEventListener("DOMContentLoaded", () => {
+        icon.src = likeBtn.classList.contains("active")
+            ? "/img/icons/heart-fill.png"
+            : "/img/icons/heart-outline.png";
+    });
+
+    /* ===============================
+       상품정보 더보기
+    =============================== */
     const productDetail = document.querySelector(".product-detail");
-    const btn = document.getElementById("toggle-btn");
+    const toggleBtn = document.getElementById("toggle-btn");
 
-    // 기본: 접힘 상태
-    productDetail.classList.add("collapsed");
+    if (productDetail && toggleBtn) {
+        productDetail.classList.add("collapsed");
 
-    btn.addEventListener("click", () => {
-        productDetail.classList.toggle("collapsed");
-        if (productDetail.classList.contains("collapsed")) {
-            btn.textContent = "상품정보 더보기 ˅";
-        } else {
-            btn.textContent = "상품정보 접기 ˄";
-        }
-    });
-});
-// 탭 클릭 이벤트 처리
-document.querySelectorAll('.tab-item').forEach(tab => {
-    tab.addEventListener('click', function() {
-        // 1. 모든 탭에서 active 클래스 제거
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-
-        // 2. 클릭한 탭에 active 클래스 추가
-        this.classList.add('active');
-
-        // 3. 모든 콘텐츠 섹션 숨기기
-        document.querySelectorAll('.tab-content-section').forEach(section => {
-            section.classList.remove('active');
+        toggleBtn.addEventListener("click", () => {
+            productDetail.classList.toggle("collapsed");
+            toggleBtn.textContent = productDetail.classList.contains("collapsed")
+                ? "상품정보 더보기 ˅"
+                : "상품정보 접기 ˄";
         });
-
-        // 4. 해당 콘텐츠만 보이기
-        const targetId = this.getAttribute('data-tab');
-        const targetSection = document.getElementById(targetId);
-
-        if (targetSection) {
-            targetSection.classList.add('active');
-        }
-    });
-});
-
-// QnA 관련
-document.querySelectorAll('.tab-item').forEach(tab => {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-
-        document.querySelectorAll('.tab-content-section').forEach(section => {
-            section.classList.remove('active');
-        });
-
-        const targetId = this.getAttribute('data-tab');
-        const targetSection = document.getElementById(targetId);
-
-        if (targetSection) {
-            targetSection.classList.add('active');
-        }
-    });
-});
-function toggleAnswer(index) {
-    const answerDetail = document.getElementById('answer-' + index);
-
-    if (answerDetail) {
-        if (answerDetail.style.display === 'none' || answerDetail.style.display === '') {
-            answerDetail.style.display = 'block';
-        } else {
-            answerDetail.style.display = 'none';
-        }
     }
+
+    /* ===============================
+       탭 전환
+    =============================== */
+    document.querySelectorAll(".tab-item").forEach(tab => {
+        tab.addEventListener("click", function () {
+            document.querySelectorAll(".tab-item").forEach(t => t.classList.remove("active"));
+            this.classList.add("active");
+
+            document.querySelectorAll(".tab-content-section")
+                .forEach(section => section.classList.remove("active"));
+
+            const target = document.getElementById(this.dataset.tab);
+            if (target) target.classList.add("active");
+        });
+    });
+
+});
+
+/* ===============================
+   장바구니
+=============================== */
+function getSelectedOptionIds() {
+    const ids = [];
+    document.querySelectorAll(".options select").forEach(select => {
+        ids.push(select.selectedOptions[0].value);
+    });
+    return ids.join("-");
 }
+
+function addToCart() {
+    const qty = parseInt(document.getElementById("quantity").value, 10) || 1;
+    const productId = parseInt(document.getElementById("productId").value, 10);
+
+    const optionValueIds = Array.from(document.querySelectorAll(".options select"))
+        .map(s => parseInt(s.value, 10));
+
+    if (optionValueIds.some(v => !v)) {
+        alert("옵션을 모두 선택해주세요!");
+        return;
+    }
+
+    fetch("/cart/add-by-options", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ productId, optionValueIds, quantity: qty })
+    })
+        .then(res => {
+            if (!res.ok) throw new Error();
+            alert("장바구니에 추가되었습니다!");
+        })
+        .catch(() => alert("장바구니 추가 실패"));
+}
+

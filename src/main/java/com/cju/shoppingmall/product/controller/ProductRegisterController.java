@@ -1,5 +1,6 @@
 package com.cju.shoppingmall.product.controller;
 
+import com.cju.shoppingmall.member.repository.MemberRepository;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.CategoryDto;
 import com.cju.shoppingmall.product.repository.CategoryRepository;
@@ -16,14 +17,16 @@ public class ProductRegisterController {
 
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
-    public ProductRegisterController(ProductService productService, CategoryRepository categoryRepository) {
+    public ProductRegisterController(ProductService productService,MemberRepository memberRepository, CategoryRepository categoryRepositoryq) {
         this.productService = productService;
-        this.categoryRepository = categoryRepository;
+        this.memberRepository = memberRepository;
+        this.categoryRepository = categoryRepositoryq;
     }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        // 🔥 폼 필드에 직접 값 주입 (setter 없이도 동작하게 만듦)
         binder.initDirectFieldAccess();
     }
 

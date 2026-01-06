@@ -18,5 +18,5 @@ public interface ProductService {
     Optional<Product> findById(Long id);
     List<OptionTypeView> getOptionViewsByProduct(Long productId);
     Long register(ProductRegisterForm form);
-    ProductVariant findVariantByOptions(Long productId, java.util.List<Long> optionValueIds);
+    ProductVariant findVariantByOptions(Long productId, List<Long> optionValueIds);
 }

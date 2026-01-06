@@ -201,7 +201,7 @@ async function onOptionsChanged() {
         return;
     }
 
-    const data = await res.json(); // { variantId, price }
+    const data = await res.json();
 
     selectedItems.push({
         key,
@@ -227,23 +227,14 @@ function paintStars(container, rating) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // ... (너 원래 코드들)
-
-    // ===============================
-    // 상품 상단 별점 (DB에서 받아서 표시)
-    // ===============================
     const ratingBox = document.querySelector(".rating[data-rating]");
     if (ratingBox) {
         const rating = ratingBox.dataset.rating; // "4.8" or "null"
         paintStars(ratingBox, rating);
     }
 
-    // ===============================
-    // 리뷰 카드 별점 (리뷰별 rating)
-    // ===============================
     document.querySelectorAll(".review-stars[data-rating]").forEach(el => {
         paintStars(el, el.dataset.rating);
     });
 
-    // ... (너 원래 코드들)
 });

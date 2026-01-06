@@ -3,12 +3,9 @@ package com.cju.shoppingmall.product.controller;
 import com.cju.shoppingmall.product.entity.Product;
 import com.cju.shoppingmall.product.entity.ProductQnA;
 import com.cju.shoppingmall.product.entity.ProductReview;
-import com.cju.shoppingmall.product.entity.ProductVariant;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cju.shoppingmall.product.service.ProductService;

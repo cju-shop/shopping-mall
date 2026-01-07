@@ -115,6 +115,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
+    public ProductVariant findVariantByOptions(Long productId, List<Long> optionValueIds) {
+
+        int cnt = optionValueIds.size();
+
+        Long variantId = productVariantRepository
+                .findVariantIdByProductAndOptionValues(productId, optionValueIds, cnt)
+                .orElseThrow(() -> new IllegalArgumentException("해당 옵션 조합 없음"));
+
+        return productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new IllegalArgumentException("variantId로 상품 변형을 찾을 수 없음: " + variantId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<OptionTypeView> getOptionViewsByProduct(Long productId) {
         List<ProductOption> productOptions = productOptionRepository.findByProduct_Id(productId);
 

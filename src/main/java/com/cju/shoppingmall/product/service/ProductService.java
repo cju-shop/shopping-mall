@@ -7,6 +7,7 @@ import com.cju.shoppingmall.product.controller.ProductRegisterForm;
 import com.cju.shoppingmall.product.dto.OptionTypeView;
 import com.cju.shoppingmall.product.entity.Category;
 import com.cju.shoppingmall.product.entity.Product;
+import com.cju.shoppingmall.product.entity.ProductVariant;
 
 public interface ProductService {
     Product create(Product product);
@@ -17,4 +18,5 @@ public interface ProductService {
     Optional<Product> findById(Long id);
     List<OptionTypeView> getOptionViewsByProduct(Long productId);
     Long register(ProductRegisterForm form);
+    ProductVariant findVariantByOptions(Long productId, List<Long> optionValueIds);
 }

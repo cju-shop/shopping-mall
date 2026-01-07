@@ -1,12 +1,24 @@
 -- product 테이블 샘플 데이터
 INSERT INTO product (
     id, name, description, thumbnail, base_price, discount_rate,
+    rating,
     category_id, created_at, created_by, updated_at, updated_by
 ) VALUES
-      (1, '라이트 니트 카디건 #1', '포근하고 가벼운 니트 카디건입니다. 부드러운 소재로 일상복이나 데일리룩에 잘 어울립니다.', 'https://picsum.photos/seed/1/800/600', 123440, NULL,
-       (SELECT id FROM category WHERE name='cardigan'), '2025-11-18 12:00:00', 1, '2025-11-18 12:00:00', 1),
-      (2, '클래식 데님 청바지', '편안하고 스타일리시한 기본 청바지입니다.', 'https://picsum.photos/seed/2/800/600', 45000, 0.05,
-       (SELECT id FROM category WHERE name='jeans'), '2025-11-17 10:00:00', 2, '2025-11-17 10:00:00', 2);
+      (1, '라이트 니트 카디건 #1',
+       '포근하고 가벼운 니트 카디건입니다. 부드러운 소재로 일상복이나 데일리룩에 잘 어울립니다.',
+       'https://picsum.photos/seed/1/800/600',
+       123440, NULL,
+       4.7,
+       (SELECT id FROM category WHERE name='cardigan'),
+       '2025-11-18 12:00:00', 1, '2025-11-18 12:00:00', 1),
+
+      (2, '클래식 데님 청바지',
+       '편안하고 스타일리시한 기본 청바지입니다.',
+       'https://picsum.photos/seed/2/800/600',
+       45000, 0.05,
+       3.9,
+       (SELECT id FROM category WHERE name='jeans'),
+       '2025-11-17 10:00:00', 2, '2025-11-17 10:00:00', 2);
 
 -- product_variant 테이블 샘플 데이터 (외래키 무결성을 위한 추가)
 INSERT INTO product_variant (

@@ -14,5 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop4ByOrderByCreatedAtDesc();
     List<Product> findTop8ByCreatedAtAfterOrderByCreatedAtDesc(LocalDateTime date);
     List<Product> findTop8ByOrderByCreatedAtDesc();
-
+    List<Product> findByNameContainingIgnoreCase(String keyword);
 }

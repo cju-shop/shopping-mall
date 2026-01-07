@@ -1,0 +1,9 @@
+<div th:if="${products == null || #lists.isEmpty(products)}">
+    검색 결과가 없습니다.
+</div>
+
+<div th:if="${products != null}" th:each="p : ${products}">
+    <div>
+        <span th:text="${p.name}">상품명</span>
+    </div>
+</div>

@@ -24,9 +24,7 @@
             </div>
         </section>
 
-        <!-- 📄 페이지네이션 (항상 표시) -->
         <nav class="pagination">
-            <!-- < (맨 앞이면 0으로 고정) -->
             <a class="nav-arrow"
                th:href="@{/products(
                 page=${page.first ? 0 : page.number - 1},
@@ -35,7 +33,6 @@
                 )}">&lt;
             </a>
 
-            <!-- 페이지 번호 -->
             <span class="page-numbers"
                   th:if="${page.totalPages > 0}">
                 <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
@@ -49,7 +46,6 @@
                 </a>
             </span>
 
-            <!-- > (맨 끝이면 last로 고정) -->
             <a class="nav-arrow"
                th:href="@{/products(
                 page=${page.last ? page.totalPages - 1 : page.number + 1},

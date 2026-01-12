@@ -1,0 +1,9 @@
+main {
+    padding: 24px 24px;
+    box-sizing: border-box;
+}
+@media (min-width: 1200px) {
+    main {
+        padding: 56px 64px;
+    }
+}

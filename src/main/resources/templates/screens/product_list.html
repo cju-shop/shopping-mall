@@ -1,9 +1,32 @@
-<div th:if="${products == null || #lists.isEmpty(products)}">
-    검색 결과가 없습니다.
-</div>
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>상품 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/product_list.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:replace="~{components/_header :: header}"></div>
+    <main>
+        <!-- 검색 결과 없을 때 -->
+        <div th:if="${products == null || #lists.isEmpty(products)}">
+            검색 결과가 없습니다.
+        </div>
 
-<div th:if="${products != null}" th:each="p : ${products}">
-    <div>
-        <span th:text="${p.name}">상품명</span>
-    </div>
-</div>
+        <!-- 검색 결과(상품 목록)도 카드로 -->
+        <section class="grid-small grid-4"
+                 th:if="${products != null && !#lists.isEmpty(products)}">
+            <div th:each="p : ${products}">
+                <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
+            </div>
+        </section>
+    </main>
+<div th:replace="~{components/_footer}"></div>
+<!-- js file -->
+<script th:src="@{/js/ad.js}"></script>
+
+</body>
+</html>

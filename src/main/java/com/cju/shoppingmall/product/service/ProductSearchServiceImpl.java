@@ -5,10 +5,10 @@ import com.cju.shoppingmall.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductSearchServiceImpl implements ProductSearchService {
     private final ProductRepository productRepository;
     ProductSearchServiceImpl(ProductRepository productRepository) {

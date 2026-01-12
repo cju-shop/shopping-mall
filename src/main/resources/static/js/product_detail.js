@@ -76,23 +76,20 @@ document.addEventListener("DOMContentLoaded", () => {
    ✅ 나중에 “selectedItems 전체”로 한 번에 담기”로 바꾸는 걸 추천
 =============================== */
 function addToCart() {
-    const productId = parseInt(document.getElementById("productId").value, 10);
-
-    const optionValueIds = Array.from(document.querySelectorAll(".options select"))
-        .map(s => parseInt(s.value, 10));
-
-    if (optionValueIds.some(v => !Number.isInteger(v) || v <= 0)) {
-        alert("옵션을 모두 선택해주세요!");
+    if (!selectedItems.length) {
+        alert("옵션을 선택해주세요!");
         return;
     }
 
-    // 수량은 카드 방식이면 여기 qty도 카드 기준으로 바꾸는 게 맞음
-    const qty = 1;
+    const items = selectedItems.map(it => ({
+        productVariantId: it.variantId,
+        quantity: it.qty
+    }));
 
-    fetch("/cart/add-by-options", {
+    fetch("/cart/add-items", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ productId, optionValueIds, quantity: qty })
+        body: JSON.stringify({ items })
     })
         .then(res => {
             if (!res.ok) throw new Error();

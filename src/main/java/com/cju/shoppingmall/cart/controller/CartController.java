@@ -29,11 +29,18 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/add-by-options")
-    public ResponseEntity<?> addToCartByOptions(@org.springframework.web.bind.annotation.RequestBody AddToCartByOptionsRequest req) {
+    @PostMapping("/add-items")
+    public ResponseEntity<?> addToCartByOptions(@org.springframework.web.bind.annotation.RequestBody AddItemsRequest req) {
         Long memberId = 1L; // 임시
-        cartService.addToCartByOptions(req.productId(), req.optionValueIds(), req.quantity(), memberId);
+
+        for (AddItemsRequest.Item item : req.items()) {
+            cartService.addToCart(item.productVariantId(), item.quantity(), memberId);
+        }
         return ResponseEntity.ok().build();
+    }
+
+    public record AddItemsRequest(List<Item> items) {
+        public record Item(Long productVariantId, Long quantity) {}
     }
 
     public record AddToCartByOptionsRequest(

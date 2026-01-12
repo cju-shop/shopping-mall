@@ -1,0 +1,53 @@
+main {
+    padding: 24px 24px;
+    box-sizing: border-box;
+}
+@media (min-width: 1200px) {
+    main {
+        padding: 56px 64px;
+    }
+}
+.grid-small.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+.grid-small.grid-4 .card {
+    width: 100%;
+}
+.pagination {
+    display: flex;
+    justify-content: center;   /* 가로 가운데 */
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0 40px;
+    font-size: 15px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+    color: #000;
+}
+
+.pagination a.active {
+    font-weight: 700;
+    color: #000;
+    text-decoration: underline;
+}
+
+.pagination .nav-arrow {
+    font-size: 16px;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 14px;
+}

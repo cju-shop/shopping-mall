@@ -5,8 +5,9 @@
             <img src="/img/logo.png" alt="logo" class="brand-logo"> <span class="brand-name">Furniro</span>
         </a>
         <!-- 검색창 -->
-        <form th:action="@{/search}" method="get" class="search-bar">
-            <input type="text" name="q" placeholder="이름으로 검색" />
+        <form th:action="@{/products}" method="get" class="search-bar">
+            <input type="text" name="keyword" placeholder="이름으로 검색"
+                   th:value="${keyword}" />
             <button type="submit" class="search-btn">&#128269;</button>
         </form>
         <!-- 아이콘 버튼 -->

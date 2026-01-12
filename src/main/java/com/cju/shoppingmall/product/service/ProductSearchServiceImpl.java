@@ -2,7 +2,9 @@ package com.cju.shoppingmall.product.service;
 
 import com.cju.shoppingmall.product.entity.Product;
 import com.cju.shoppingmall.product.repository.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -13,10 +15,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> searchByName(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return productRepository.findAll(); // 검색어 없으면 전체
+    @Override
+    public Page<Product> searchByName(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isBlank()) {
+            return productRepository.findAll(pageable);
         }
-        return productRepository.findByNameContainingIgnoreCase(keyword.trim());
+        return productRepository.findByNameContainingIgnoreCase(keyword.trim(), pageable);
     }
 }

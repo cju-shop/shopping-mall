@@ -23,10 +23,43 @@
                 <div th:replace="~{product/_card :: productCard(p=${p},type='small')}"></div>
             </div>
         </section>
+
+        <!-- 📄 페이지네이션 (항상 표시) -->
+        <nav class="pagination">
+            <!-- < (맨 앞이면 0으로 고정) -->
+            <a class="nav-arrow"
+               th:href="@{/products(
+                page=${page.first ? 0 : page.number - 1},
+                size=${size},
+                keyword=${keyword}
+                )}">&lt;
+            </a>
+
+            <!-- 페이지 번호 -->
+            <span class="page-numbers"
+                  th:if="${page.totalPages > 0}">
+                <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                   th:href="@{/products(
+                        page=${i},
+                        size=${size},
+                        keyword=${keyword}
+                   )}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == page.number} ? 'active' : ''">
+                </a>
+            </span>
+
+            <!-- > (맨 끝이면 last로 고정) -->
+            <a class="nav-arrow"
+               th:href="@{/products(
+                page=${page.last ? page.totalPages - 1 : page.number + 1},
+                size=${size},
+                keyword=${keyword}
+                )}">&gt;
+            </a>
+        </nav>
     </main>
 <div th:replace="~{components/_footer}"></div>
-<!-- js file -->
-<script th:src="@{/js/ad.js}"></script>
 
 </body>
 </html>

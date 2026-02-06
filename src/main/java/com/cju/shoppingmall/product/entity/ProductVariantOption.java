@@ -1,10 +1,12 @@
 package com.cju.shoppingmall.product.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name = "product_variant_option")
 @IdClass(ProductVariantOptionId.class)
+@Getter
 public class ProductVariantOption {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

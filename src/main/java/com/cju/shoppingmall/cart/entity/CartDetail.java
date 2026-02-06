@@ -32,6 +32,10 @@ public class CartDetail {
         this.qty += qty;
     }
 
+    public void updateQty(Long qty) {
+        this.qty = qty;
+    }
+
     protected CartDetail() {
     }
 }
